@@ -1,8 +1,6 @@
 const express = require("express");
 const userControler = require("../controllers/userController");
 const authController = require("../controllers/authController");
-const timeController = require("../controllers/timeController");
-const pushNotificationController = require("../controllers/push-notificationController");
 
 const router = express.Router();
 
@@ -25,20 +23,6 @@ router.use(authController.protect);
 // router.get("/mynotifications", userController.mynotifications);
 router.patch("/updateMyPassword", authController.updatePassword);
 router.post("/logout", authController.logout);
-router.post(
-  "/send-notification",
-  pushNotificationController.sendPushNotification
-);
-// router.patch(
-//   "/updateMe",
-//   userController.uploadUserPhoto,
-//   userController.resizeUserPhoto,
-//   userController.updateMe
-// );
-
-// router.get("/speedPlay", timeController.startEggTimer);
-// router.get("/soloPlay", timeController.startEggTimer);
-
 router.get("/me", userControler.getMe, userControler.getUser);
 router.patch("/updateProfile", userControler.updateMe);
 // router.patch("/updateMe", userControler.updateMe);

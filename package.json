@@ -1,7 +1,7 @@
 {
-  "name": "worldsnap",
+  "name": "2 beloved deluxe",
   "version": "1.0.0",
-  "description": "This is the backend of worldsnap application",
+  "description": "This is the backend of 2 beloved deluxe application",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,7 +17,6 @@
     "express": "^4.18.2",
     "firebase-admin": "^11.11.1",
     "helmet": "^7.1.0",
-    "html-to-text": "^9.0.5",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.43",
     "mongoose": "^8.0.0",
