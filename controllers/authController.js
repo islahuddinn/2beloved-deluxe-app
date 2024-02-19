@@ -25,7 +25,7 @@ const signToken = (id, noExpiry) => {
     )
   );
 };
-// ======== function to creat and send token===========
+//// ======== function to creat and send token===========
 
 const creatSendToken = async (
   user,

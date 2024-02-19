@@ -7,7 +7,7 @@ module.exports = class Email {
     this.firstName = user.name;
 
     this.url = url;
-    this.from = `WordSnap App <${process.env.GMAILUSER}>`;
+    this.from = `2 Beloved-deluxe-App <${process.env.GMAILUSER}>`;
   }
 
   newTransport() {

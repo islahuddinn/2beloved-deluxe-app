@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    dateOfBirth: {
+      type: Date,
+    },
     email: {
       type: String,
       unique: true,
@@ -15,11 +18,37 @@ const userSchema = new mongoose.Schema(
       //   lowercase: truee,
       validate: [validator.isEmail, "please provide a valid email"],
     },
-    number: String,
     image: {
       type: String,
       default:
         "https://icon-library.com/images/default-profile-icon/default-profile-icon-6.jpg",
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+    },
+    haveChildren: {
+      type: String,
+      enum: ["Yes", "No"],
+    },
+    isVaccinated: {
+      type: String,
+      enum: ["Yes", "No"],
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    age: {
+      type: Number,
+      required: true,
+    },
+    height: {
+      type: Number,
+    },
+    doYouSmoke: {
+      type: String,
+      enum: ["Yes", "No"],
     },
     password: {
       type: String,
@@ -34,33 +63,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
       select: false,
-    },
-    country: {
-      type: String,
-      sparse: true,
-    },
-    state: {
-      type: String,
-      sparse: true,
-    },
-    city: {
-      type: String,
-      sparse: true,
-    },
-    mode: {
-      type: String,
-    },
-    minutes: {
-      type: Number,
-      default: 0,
-    },
-    seconds: {
-      type: Number,
-      default: 0,
-    },
-    gameStatus: {
-      type: String,
-      default: "not_started",
     },
     otp: {
       type: Number,
