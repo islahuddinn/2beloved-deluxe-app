@@ -23,6 +23,13 @@ const userSchema = new mongoose.Schema(
       default:
         "https://icon-library.com/images/default-profile-icon/default-profile-icon-6.jpg",
     },
+    location: {
+      type: {
+        type: String,
+        default: "Point",
+      },
+      coordinates: { type: [Number], default: [0, 0] },
+    },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
@@ -44,7 +51,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     height: {
-      type: Number,
+      type: String,
     },
     doYouSmoke: {
       type: String,
@@ -73,7 +80,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    customerId: String,
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
