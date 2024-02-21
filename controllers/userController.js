@@ -8,7 +8,6 @@ const Notification = require("../models/notificationModel");
 const paginationQueryExtracter = require("../utils/paginationQueryExtractor");
 const paginateArray = require("../utils/paginationHelper");
 const RefreshToken = require("../models/refreshTokenModel");
-// const Guardian = require("../Models/guardianModel");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};

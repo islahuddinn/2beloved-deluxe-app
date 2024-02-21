@@ -531,20 +531,20 @@ exports.protect = catchAsync(async (req, res, next) => {
 // //================= Authorization=============
 // //Restrict who can delete tour
 
-// exports.restrictTo = (...roles) => {
-//   return (req, res, next) => {
-//     console.log(req.user.name, roles);
-//     if (!roles.includes(req.user.role)) {
-//       return res.status(403).send({
-//         status: 403,
-//         success: false,
-//         message: "You do not have permission to perform this action",
-//         data: {},
-//       });
-//     }
-//     next();
-//   };
-// };
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    console.log(req.user.name, roles);
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).send({
+        status: 403,
+        success: false,
+        message: "You do not have permission to perform this action",
+        data: {},
+      });
+    }
+    next();
+  };
+};
 
 // // =================================================================================
 
