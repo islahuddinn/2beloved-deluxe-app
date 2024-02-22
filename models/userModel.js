@@ -24,15 +24,21 @@ const userSchema = new mongoose.Schema(
         "https://icon-library.com/images/default-profile-icon/default-profile-icon-6.jpg",
     },
     location: {
+      // Geo JSON Object
       type: {
         type: String,
         default: "Point",
       },
-      coordinates: { type: [Number], default: [0, 0] },
+      coordinates: { type: [Number], default: [0.0, 0.0] },
+      address: String,
+      description: String,
     },
     gender: {
       type: String,
-      enum: ["Male", "Female", "Other"],
+      enum: {
+        values: ["Male", "Female", "Other"],
+        message: "Enter valid gender",
+      },
     },
     haveChildren: {
       type: String,
@@ -70,6 +76,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
       select: false,
+    },
+    role: {
+      type: String,
+      enum: {
+        values: ["admin", "user"],
+        message: "Enter valid role ",
+      },
+      default: "user",
     },
     otp: {
       type: Number,

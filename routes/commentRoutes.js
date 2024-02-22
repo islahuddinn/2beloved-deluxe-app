@@ -6,7 +6,7 @@ const router = express.Router();
 router.post(
   "/create/:id",
   authController.protect,
-  authController.restrictTo("user"),
+  // authController.restrictTo("user"),
   commentController.createComment
 );
 router.get("/", commentController.getallComment);
@@ -17,12 +17,12 @@ router
   .get(commentController.getOneComment)
   .patch(
     authController.protect,
-    authController.restrictTo("user", "admin"),
+    // authController.restrictTo("user"),
     commentController.updateComment
   )
   .delete(
     authController.protect,
-    authController.restrictTo("user", "admin"),
+    // authController.restrictTo("user", "admin"),
     commentController.deleteComment
   );
 

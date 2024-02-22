@@ -9,17 +9,17 @@ exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const { password } = req.body;
     const doc = await Model.findOne({ _id: req.params.id }).select("+password");
-
-    // console.log("Provided Password:", password);
-    // console.log(
-    //   "Stored Hashed Password:",
-    //   doc ? doc.password : " not found"
-    // );
+    // const doc = await Model.findById(req.params.id).exec();
+    console.log("Provided Password:", password);
+    console.log("Stored Hashed Password:", doc ? doc.password : " not found");
 
     // Compare the provided password with the hashed password
 
     if (!doc) {
       return next(new AppErr("No User found with that Id", 404));
+    }
+    if (!doc.password) {
+      return next(new AppErr("No hashed password found", 404));
     }
 
     const passwordMatch = await bcrypt.compare(

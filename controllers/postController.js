@@ -35,13 +35,12 @@ exports.createPostAdmin = catchAsync(async (req, res, next) => {
 
 exports.createPost = catchAsync(async (req, res, next) => {
   const { content, text, tags, location } = req.body;
-  const user = await User.findById(req.user.id).select("preferences");
+  const user = await User.findById(req.user.id);
   let post = await Post.create({
     content,
     text,
     tags,
     location,
-    preferences: user.preferences,
     creator: req.user.id,
   });
   post = await Post.findById(post._id);

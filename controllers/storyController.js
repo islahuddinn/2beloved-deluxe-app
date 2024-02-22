@@ -1,5 +1,5 @@
-const Follow = require("../Models/followModel");
-const Seen = require("../Models/seenModel");
+const Follow = require("../models/friendsModel");
+const Seen = require("../models/seenModel");
 const Story = require("../models/storyModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");

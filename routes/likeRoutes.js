@@ -15,12 +15,12 @@ router
   .get(likeController.getOneLike)
   .patch(
     authController.protect,
-    authController.restrictTo("admin"),
+    // authController.restrictTo("admin"),
     likeController.updateLike
   )
   .delete(
     authController.protect,
-    authController.restrictTo("admin"),
+    // authController.restrictTo("admin"),
     likeController.deleteLike
   );
 
