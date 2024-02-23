@@ -15,12 +15,12 @@ router
   .get(followController.getOneFollow)
   .patch(
     authController.protect,
-    authController.restrictTo("admin"),
+    // authController.restrictTo("admin"),
     followController.updateFollow
   )
   .delete(
     authController.protect,
-    authController.restrictTo("admin"),
+    // authController.restrictTo("admin"),
     followController.deleteFollow
   );
 

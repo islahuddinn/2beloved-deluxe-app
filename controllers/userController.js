@@ -8,6 +8,15 @@ const Notification = require("../models/notificationModel");
 const paginationQueryExtracter = require("../utils/paginationQueryExtractor");
 const paginateArray = require("../utils/paginationHelper");
 const RefreshToken = require("../models/refreshTokenModel");
+const {
+  followingsCheckArray,
+  followingsCheckSingle,
+} = require("../utils/helpers");
+const chatModel = require("../models/chatModel");
+const Message = require("../models/messageModel");
+const Saved = require("../models/saveModel");
+const Post = require("../models/postModel");
+const Follow = require("../models/friendsModel");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -163,4 +172,92 @@ exports.mynotifications = catchAsync(async (req, res, next) => {
     size: mergedNotifications.length,
     data,
   });
+});
+
+////===User Search=====//////
+exports.searchUsers = catchAsync(async (req, res, next) => {
+  let condition;
+  let data;
+  let search;
+  console.log("serach query", req.query.search);
+  if (req.query.search) {
+    const escapedSearch = escapeRegExp(req.query.search);
+    search = {
+      $or: [
+        {
+          username: {
+            $regex: new RegExp(escapedSearch, "i"),
+          },
+        },
+        {
+          firstName: { $regex: new RegExp(escapedSearch, "i") },
+        },
+        {
+          lastName: { $regex: new RegExp(escapedSearch, "i") },
+        },
+        // {
+        //   tags: {
+        //     $elemMatch: { $regex: new RegExp(req.query.search, "i") },
+        //   },
+        // }, // Case-insensitive search for tags array
+      ],
+    };
+  }
+
+  condition = {
+    $and: [
+      { ...search },
+      { role: "user" },
+      { verified: true },
+      { isComplete: true },
+    ],
+  };
+  console.log(condition);
+  req.query.search = undefined;
+  data = await paginationQueryExtracter(req, User, condition);
+  const users = await followingsCheckArray(
+    req.user.id,
+    JSON.parse(JSON.stringify(data.data))
+  );
+
+  res.json({
+    status: 200,
+    success: true,
+    message: "Data Retrieved Successfully",
+    results: data.data.length,
+    data: {
+      data: users,
+      totalPages: data.totalPages,
+    },
+  });
+});
+
+exports.userStats = catchAsync(async (req, res, next) => {
+  const [user, followers, following, posts] = await Promise.all([
+    User.findById(req.params.id).select(
+      "name image location gender dateOfBirth"
+    ),
+    Follow.countDocuments({ following: req.params.id }),
+    Follow.countDocuments({ creator: req.params.id }),
+    Post.countDocuments({ creator: req.params.id }),
+  ]);
+  res.json({
+    status: 200,
+    success: true,
+    message: "Data Retrieved Successfully",
+    user,
+    followers,
+    following,
+    posts,
+  });
+});
+
+cron.schedule("0 */5 * * * *", async () => {
+  try {
+    await Notification.deleteMany({
+      createdAt: { $lte: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });

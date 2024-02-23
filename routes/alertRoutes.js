@@ -6,7 +6,7 @@ const router = express.Router();
 router.post(
   "/send",
   authController.protect,
-  authController.restrictTo("admin"),
+  // authController.restrictTo("admin"),
   alertController.sendAlert
 );
 

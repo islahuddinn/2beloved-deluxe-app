@@ -3,34 +3,32 @@ const AppErr = require("../utils/appError");
 const bcrypt = require("bcrypt");
 const ApiFeatures = require("../utils/apiFeatures");
 const paginationQueryExtracter = require("../utils/paginationQueryExtractor");
+const User = require("../models/userModel");
 //  Factory function to delete a document
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const { password } = req.body;
-    const doc = await Model.findOne({ _id: req.params.id }).select("+password");
+    // const { password } = req.body;
+    const doc = await Model.findById({ _id: req.params.id });
     // const doc = await Model.findById(req.params.id).exec();
-    console.log("Provided Password:", password);
-    console.log("Stored Hashed Password:", doc ? doc.password : " not found");
+    // console.log("Provided Password:", password);
+    // console.log("Stored Hashed Password:", doc ? doc.password : " not found");
 
     // Compare the provided password with the hashed password
 
     if (!doc) {
-      return next(new AppErr("No User found with that Id", 404));
-    }
-    if (!doc.password) {
-      return next(new AppErr("No hashed password found", 404));
+      return next(new AppErr("No document found with that Id", 404));
     }
 
-    const passwordMatch = await bcrypt.compare(
-      password,
-      doc ? doc.password : ""
-    );
+    // const passwordMatch = await bcrypt.compare(
+    //   password,
+    //   doc ? doc.password : ""
+    // );
 
-    console.log(passwordMatch);
-    if (!passwordMatch) {
-      return next(new AppErr("Incorrect password", 401));
-    }
+    // console.log(passwordMatch);
+    // if (!passwordMatch) {
+    //   return next(new AppErr("Incorrect password", 401));
+    // }
 
     // If passwords match, delete the document
     await Model.findByIdAndDelete(req.params.id);
@@ -38,7 +36,7 @@ exports.deleteOne = (Model) =>
     res.status(200).json({
       status: 200,
       success: true,
-      message: "User deleted successfully",
+      message: "document deleted successfully",
       data: null,
     });
   });
@@ -51,6 +49,7 @@ exports.updateOne = (Model) =>
       new: true,
       runValidators: true,
     });
+    console.log(doc);
     if (!doc) {
       return next(new AppErr("No document found with that Id", 404));
     }

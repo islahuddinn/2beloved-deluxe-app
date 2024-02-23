@@ -28,7 +28,8 @@ router.get("/me", userControler.getMe, userControler.getUser);
 router.patch("/updateProfile", userControler.updateMe);
 // router.patch("/updateMe", userControler.updateMe);
 // router.patch("/updateProfile", userControler.updateUserProfile);
-// router.delete("/deleteMe", userControler.deleteMe); its not functional yet if required then modify
+router.get("/search", userControler.searchUsers);
+router.get("/stats/:id", userControler.userStats);
 router.route("/getAllUsers").get(userControler.getAllUsers);
 
 // router.use(authController.restrictTo("admin"));
