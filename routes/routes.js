@@ -2,6 +2,7 @@ const express = require("express");
 const userRoutes = require("./userRoutes");
 const privacyRoutes = require("./privacyPolicyRoutes");
 const termsandconditionRoutes = require("./termsAndConditionRoutes");
+const subscriptionRoutes = require("./subscriptionRoutes");
 const interestRoutes = require("./interestRoutes");
 const friendsRoutes = require("./friendsRoutes");
 const likeRoutes = require("./likeRoutes");
@@ -24,6 +25,7 @@ const setupRoutesV1 = () => {
   router.use("/post", postRoutes);
   router.use("/story", storyRoutes);
   router.use("/alert", alertRoutes);
+  router.use("/subscription", subscriptionRoutes);
 
   return router;
 };

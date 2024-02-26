@@ -69,6 +69,21 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
+
+    customerId: String,
+    subscriptionId: String,
+    creator: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+    subscriptionPlan: {
+      type: String,
+      enum: {
+        values: ["free", "monthly"],
+        message: "Enter valid plan ",
+      },
+      default: "free",
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
