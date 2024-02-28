@@ -33,6 +33,18 @@ const userSchema = new mongoose.Schema(
       address: String,
       description: String,
     },
+    boostStartDate: {
+      type: Date,
+      required: true,
+    },
+    boostEndDate: {
+      type: Date,
+      required: true,
+    },
+    boostActive: {
+      type: Boolean,
+      default: false,
+    },
     gender: {
       type: String,
       enum: {

@@ -104,11 +104,12 @@ exports.createSubscription = catchAsync(async (req, res, next) => {
     req.body.type === allSubscriptionTypes.monthly.type
       ? process.env.STRIPE_MONTHLY
       : null;
+  console.log(subscriptionType);
 
   try {
     const ephemeralKey = await stripe.ephemeralKeys.create(
       { customer: customerId },
-      { apiVersion: "2024-02-26" }
+      { apiVersion: "2023-10-16" }
     );
 
     // Create the subscription. Note we're expanding the Subscription's
@@ -173,7 +174,7 @@ exports.createSubscription = catchAsync(async (req, res, next) => {
       ephemeralKey,
       clientSecret: subscription.latest_invoice.payment_intent.client_secret,
       publishableKey:
-        "pk_test_51LVrpTDvaubKxP1oDwMPA0AF1twyVDXvxvgMmcAlxhqtOS6uPSHrMl2kA47XkWZLEwJ6xY2DWvt7swpxWPavQC9F00aBWuFM26",
+        "pk_test_51OjhhtCeCdY6x3DbXwdsT1lCpwwno7b666vrYorHrhlhY266fTZcyAEYEFnzAnDU5LkxEKgQbn9ieubooCaA4m9h00Ku0S40rr",
       subscription,
     });
     // }
