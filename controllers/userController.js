@@ -15,6 +15,7 @@ const {
 const chatModel = require("../models/chatModel");
 const Message = require("../models/messageModel");
 const Saved = require("../models/saveModel");
+const Boost = require("../models/boostProfileModel");
 const Post = require("../models/postModel");
 const Follow = require("../models/friendsModel");
 
@@ -90,7 +91,35 @@ exports.getUser = catchAsync(async (req, res, next) => {
     user,
   });
 });
-exports.getAllUsers = factory.getAll(User);
+// exports.getAllUsers = factory.getAll(User);
+//// get All user with boosted profiles
+
+async function prioritizeBoostedProfiles() {
+  // Fetch boosted profiles
+  const boostedProfiles = await Boost.find();
+
+  // Map boosted profile IDs to prioritize users
+  const boostedProfileIds = boostedProfiles.map((profile) => profile.userId);
+
+  // Update users to prioritize boosted profiles
+  await User.updateMany(
+    { _id: { $in: boostedProfileIds } }, // Query to find users with boosted profiles
+    { $set: { priority: 1 } } // Set a priority field to prioritize these users
+  );
+}
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  await prioritizeBoostedProfiles(); // Prioritize boosted profiles
+
+  // Fetch all users, sorted by priority (boosted profiles first)
+  const users = await User.find().sort({ priority: -1 });
+
+  return res.status(200).json({
+    status: 200,
+    success: true,
+    users,
+  });
+});
 
 // Do NOT update passwords with this!
 exports.updateUser = factory.updateOne(User);

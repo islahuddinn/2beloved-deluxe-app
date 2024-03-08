@@ -13,18 +13,18 @@ function prioritizeBoostedProfiles(profiles) {
 }
 export default prioritizeBoostedProfiles();
 
-/////// Another scenario for profile booster
-const prioritizeBoostedProfiles = async (query) => {
-  // Query database to retrieve search results
-  const searchResults = await User.find(query);
+// /////// Another scenario for profile booster
+// const prioritizeBoostedProfiles = async (query) => {
+//   // Query database to retrieve search results
+//   const searchResults = await User.find(query);
 
-  // Sort search results based on boost status and expiration date
-  const sortedResults = searchResults.sort((a, b) => {
-    if (a.isBoosted && !b.isBoosted) return -1; // Boosted profiles first
-    if (!a.isBoosted && b.isBoosted) return 1; // Non-boosted profiles later
-    // If both profiles are boosted, prioritize by boost end date
-    return a.boostEndDate - b.boostEndDate;
-  });
+//   // Sort search results based on boost status and expiration date
+//   const sortedResults = searchResults.sort((a, b) => {
+//     if (a.isBoosted && !b.isBoosted) return -1; // Boosted profiles first
+//     if (!a.isBoosted && b.isBoosted) return 1; // Non-boosted profiles later
+//     // If both profiles are boosted, prioritize by boost end date
+//     return a.boostEndDate - b.boostEndDate;
+//   });
 
-  return sortedResults;
-};
+//   return sortedResults;
+// };
