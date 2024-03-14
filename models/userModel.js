@@ -35,11 +35,9 @@ const userSchema = new mongoose.Schema(
     },
     boostStartDate: {
       type: Date,
-      required: true,
     },
     boostEndDate: {
       type: Date,
-      required: true,
     },
     boostActive: {
       type: Boolean,
@@ -62,11 +60,9 @@ const userSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     age: {
       type: Number,
-      required: true,
     },
     height: {
       type: String,
