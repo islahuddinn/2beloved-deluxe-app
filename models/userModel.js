@@ -71,6 +71,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["Yes", "No"],
     },
+    interests: {
+      type: String,
+    },
     password: {
       type: String,
       required: [true, "must enter password"],

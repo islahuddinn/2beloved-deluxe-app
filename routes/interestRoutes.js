@@ -7,7 +7,11 @@ const router = express.Router();
 router.use(authController.protect);
 router.post("/addSocialLinks", interestController.createSocialLinks);
 router.get("/getSocialLinks", interestController.getSocialLinks);
-router.post("/create", interestController.createInterests);
+router.get(
+  "/getAllAvailableInterests",
+  interestController.getAllAvailableInterests
+);
+router.post("/add", interestController.addUserInterests);
 
 router.get("/", interestController.getAllInterest);
 router

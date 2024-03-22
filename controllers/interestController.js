@@ -2,6 +2,10 @@ const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
 const Interest = require("../models/interestModel");
 const Factory = require("./handleFactory");
+const uuid = require("uuid");
+const slugify = require("slugify");
+const _ = require("lodash");
+const { default: mongoose } = require("mongoose");
 
 ////======= Function to create social links for the current user========////
 exports.createSocialLinks = catchAsync(async (req, res, next) => {
@@ -64,40 +68,97 @@ exports.getSocialLinks = async (req, res, next) => {
   }
 };
 
-// exports.getSocialLinks = async (req, res, next) => {
-//   try {
-//     const userId = req.user._id; // Assuming userId is used to identify the user
-//     const user = await User.findById(userId); // Retrieve the user from the database
-
-//     console.log(user);
-
-//     if (!user) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "User not found" });
-//     }
-
-//     const socialLinks = await Social.findOne({ user: user._id }); // Assuming socialLinks is the field containing the social links
-//     console.log(socialLinks);
-//     return res.status(200).json({ success: true, data: socialLinks });
-//   } catch (error) {
-//     console.error("Error fetching social links:", error);
-//     return res
-//       .status(500)
-//       .json({ success: false, message: "Internal server error" });
-//   }
-// };
-
 //////=====User Interests APIs=========/////
-exports.createInterests = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const interests = req.body;
 
+const interestsData = [
+  { title: "Cricket" },
+  { title: "Entertainment" },
+  { title: "TV" },
+  { title: "Videos" },
+  { title: "First/Opening Line" },
+  { title: "Character" },
+  { title: "Genre" },
+  { title: "Protagonist" },
+  { title: "Antagonist" },
+  { title: "Narrator" },
+  { title: "Outline" },
+  { title: "Purpose" },
+  { title: "Focused Direction" },
+  { title: "Narrate Voice" },
+  { title: "Characters" },
+  { title: "Chord" },
+  { title: "Basic Chords" },
+  { title: "Chord Progression" },
+  { title: "Common Chord Progressions" },
+];
+
+exports.getAllAvailableInterests = async (req, res) => {
   try {
-    // Find the user by userId
-    const user = await User.findById(userId);
+    // Check if interests already exist
+    const existingInterests = await Interest.find();
+    if (existingInterests.length > 0) {
+      // If interests already exist, return the first saved interest object
+      return res.json(existingInterests[0]);
+    }
 
-    // If user not found, return an error
+    // If interests do not exist, create new interest objects
+    const formattedData = new Interest({
+      interests: interestsData.map((interest) => ({
+        id: new mongoose.Types.ObjectId(),
+        title: interest.title,
+      })),
+    });
+    const savedInterest = await formattedData.save();
+    res.json(savedInterest);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      status: 500,
+      message: "Internal server error",
+    });
+  }
+};
+
+// Function to generate a unique ID
+// function generateUniqueId() {
+//   return uuid.v4(); // Generate a version 4 UUID
+// }
+exports.addUserInterests = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is retrieved from the request
+    const chosenInterestIds = req.body.chosenInterestIds; // Assuming chosen interests are sent in the request body
+
+    // Validate chosenInterestIds
+    if (!_.isArray(chosenInterestIds) || chosenInterestIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "Invalid chosen interest format",
+      });
+    }
+
+    // Fetch all interests from the database (assuming you have an Interest model)
+    const allInterests = await Interest.find(); // Assuming Interest model exists
+
+    // Filter chosen interests based on provided IDs
+    const chosenInterests = allInterests.flatMap((interest) => {
+      return interest.interests.filter((innerInterest) =>
+        chosenInterestIds.includes(innerInterest.id.toString())
+      );
+    });
+    console.log(chosenInterests, "yomolpo");
+    // Ensure at least one chosen interest exists
+    if (chosenInterests.length === 0) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "No chosen interests found in the database",
+      });
+    }
+
+    // Update user's interests (assuming 'interests' field exists in the User model)
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -105,51 +166,28 @@ exports.createInterests = catchAsync(async (req, res, next) => {
         message: "User not found",
       });
     }
+    console.log(user, "salluu");
+    // Update user's interests by adding chosen interest IDs (assuming they are the innerInterest.id values)
 
-    // Create a new interest object
-    const newInterest = new Interest({
-      userId: userId,
-      cricket: interests.cricket || false,
-      entertainment: interests.entertainment || false,
-      tv: interests.tv || false,
-      videos: interests.videos || false,
-      openingLine: interests.openingLine || "",
-      character: interests.character || "",
-      genre: interests.genre || "",
-      protagonist: interests.protagonist || "",
-      antagonist: interests.antagonist || "",
-      narrator: interests.narrator || "",
-      outline: interests.outline || "",
-      purpose: interests.purpose || "",
-      focusedDirection: interests.focusedDirection || "",
-      narrateVoice: interests.narrateVoice || "",
-      characters: interests.characters || "",
-      chord: interests.chord || "",
-      basicChord: interests.basicChord || "",
-      chordProgression: interests.chordProgression || "",
-      commonChordProgressions: interests.commonChordProgressions || "",
-      preferredGenre: interests.preferredGenre || "",
-    });
+    await user.save();
 
-    // Save the interest object
-    const savedInterest = await newInterest.save();
-
-    // Return success response
-    res.status(201).json({
+    // Return the chosen interests in the response
+    res.json({
       success: true,
-      status: 201,
-      message: "Interests created successfully",
-      data: savedInterest,
+      status: 200,
+      message: "User interests updated successfully",
+      data: chosenInterests, // Return the chosen interests
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       status: 500,
       message: "Internal server error",
     });
   }
-});
+};
+
 //// in case we need to delte user interests
 exports.deleteInterest = catchAsync(async (req, res, next) => {
   // Extract the interest ID from request parameters
