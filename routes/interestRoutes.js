@@ -17,7 +17,7 @@ router.get("/", interestController.getAllInterest);
 router
   .route("/:id")
   .get(interestController.getOneInterest)
-  .patch(interestController.updateInterest);
-//   .delete(authController.protect, interestController.deleteInterest); // not functional
+  .patch(interestController.updateUserInterests)
+  .delete(interestController.deleteInterest);
 
 module.exports = router;

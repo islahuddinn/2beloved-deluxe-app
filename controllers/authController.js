@@ -148,7 +148,7 @@ exports.socialLogin = catchAsync(async (req, res) => {
     user: user._id,
   });
   if (logedIn) {
-    await RefreshToken.findByIdAndRemove(logedIn._id);
+    await RefreshToken.findByIdAndDelete(logedIn._id);
   }
 
   res.act = loginChecks(user);
@@ -463,6 +463,10 @@ exports.login = catchAsync(async (req, res, next) => {
       success: false,
       data: {},
     });
+  }
+  // Check if user profile setup is completed
+  if (!user.profileSetup) {
+    res.act = "Profile-setup-pending";
   }
   await User.updateOne(
     { _id: user._id },

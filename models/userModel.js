@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
       address: String,
       description: String,
     },
+    profileSetup: {
+      type: Boolean,
+      default: false,
+    },
     boostStartDate: {
       type: Date,
     },
@@ -73,6 +77,10 @@ const userSchema = new mongoose.Schema(
     },
     interests: {
       type: String,
+    },
+    isInterests: {
+      type: Boolean,
+      default: false,
     },
     password: {
       type: String,

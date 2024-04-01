@@ -126,8 +126,8 @@ exports.getAllAvailableInterests = async (req, res) => {
 // }
 exports.addUserInterests = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming user ID is retrieved from the request
-    const chosenInterestIds = req.body.chosenInterestIds; // Assuming chosen interests are sent in the request body
+    const userId = req.user.id;
+    const chosenInterestIds = req.body.chosenInterestIds;
 
     // Validate chosenInterestIds
     if (!_.isArray(chosenInterestIds) || chosenInterestIds.length === 0) {
@@ -137,9 +137,24 @@ exports.addUserInterests = async (req, res) => {
         message: "Invalid chosen interest format",
       });
     }
-
-    // Fetch all interests from the database (assuming you have an Interest model)
-    const allInterests = await Interest.find(); // Assuming Interest model exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        status: 404,
+        message: "User not found",
+      });
+    }
+    // Check if profile setup is completed
+    if (!user.profileSetup) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message:
+          "Profile setup is not completed. Please complete profile setup before adding interests.",
+      });
+    }
+    const allInterests = await Interest.find();
 
     // Filter chosen interests based on provided IDs
     const chosenInterests = allInterests.flatMap((interest) => {
@@ -156,8 +171,44 @@ exports.addUserInterests = async (req, res) => {
         message: "No chosen interests found in the database",
       });
     }
+    const newInterests = await Interest.create({
+      interests: chosenInterests,
+      creator: req.user.id,
+    });
 
-    // Update user's interests (assuming 'interests' field exists in the User model)
+    console.log(newInterests, "salluu");
+
+    await user.save();
+    res.json({
+      success: true,
+      status: 200,
+      message: "User interests updated successfully",
+      data: newInterests,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      status: 500,
+      message: "Internal server error",
+    });
+  }
+};
+/////Update user interests
+exports.updateUserInterests = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const chosenInterestIds = req.body.chosenInterestIds;
+
+    // Validate chosenInterestIds
+    if (!Array.isArray(chosenInterestIds) || chosenInterestIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "Invalid chosen interest format",
+      });
+    }
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -166,17 +217,31 @@ exports.addUserInterests = async (req, res) => {
         message: "User not found",
       });
     }
-    console.log(user, "salluu");
-    // Update user's interests by adding chosen interest IDs (assuming they are the innerInterest.id values)
 
-    await user.save();
+    // Update user's interests
+    const allInterests = await Interest.find();
 
-    // Return the chosen interests in the response
+    // Filter chosen interests based on provided IDs
+    const chosenInterests = allInterests.flatMap((interest) => {
+      return interest.interests.filter((innerInterest) =>
+        chosenInterestIds.includes(innerInterest.id.toString())
+      );
+    });
+    const updatedInterersts = await Interest.findByIdAndUpdate(
+      userId,
+      chosenInterests,
+      { new: true }
+    );
+    // user.interests = chosenInterestIds;
+
+    // Save the user
+    // await user.save();
+
     res.json({
       success: true,
       status: 200,
       message: "User interests updated successfully",
-      data: chosenInterests, // Return the chosen interests
+      data: updatedInterersts,
     });
   } catch (error) {
     console.error(error);
@@ -215,5 +280,5 @@ exports.deleteInterest = catchAsync(async (req, res, next) => {
 exports.createInterest = Factory.creatOne(Interest);
 exports.getAllInterest = Factory.getAll(Interest);
 exports.getOneInterest = Factory.getOne(Interest);
-exports.updateInterest = Factory.updateOne(Interest);
-// exports.deleteInterest = Factory.deleteOne(Interest);
+// exports.updateInterest = Factory.updateOne(Interest);
+exports.deleteInterest = Factory.deleteOne(Interest);
