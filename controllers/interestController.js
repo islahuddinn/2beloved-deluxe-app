@@ -175,6 +175,7 @@ exports.addUserInterests = async (req, res) => {
       interests: chosenInterests,
       creator: req.user.id,
     });
+    user.isInterests = true;
 
     console.log(newInterests, "salluu");
 
@@ -209,7 +210,8 @@ exports.updateUserInterests = async (req, res) => {
       });
     }
 
-    const user = await User.findById(userId);
+    // Find the user and populate existing interests
+    const user = await User.findById(userId).populate("interests");
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -218,34 +220,39 @@ exports.updateUserInterests = async (req, res) => {
       });
     }
 
-    // Update user's interests
-    const allInterests = await Interest.find();
+    // Ensure that user.interests is defined and is an array
+    const existingInterests = user.interests || [];
 
-    // Filter chosen interests based on provided IDs
-    const chosenInterests = allInterests.flatMap((interest) => {
-      return interest.interests.filter((innerInterest) =>
-        chosenInterestIds.includes(innerInterest.id.toString())
-      );
-    });
-    const updatedInterersts = await Interest.findByIdAndUpdate(
-      userId,
-      chosenInterests,
-      { new: true }
+    // Get the IDs of existing interests
+    const existingInterestIds = existingInterests.map(
+      (interest) => interest.id
     );
-    // user.interests = chosenInterestIds;
 
-    // Save the user
-    // await user.save();
+    // Filter chosen interests to exclude existing ones
+    const newInterestIds = chosenInterestIds.filter(
+      (id) => !existingInterestIds.includes(id)
+    );
 
-    res.json({
+    // Create new interests and associate them with the user
+    const newInterests = await Interest.insertMany(
+      newInterestIds.map((id) => ({ user: userId, interest: id }))
+    );
+
+    // Add the newly created interests to the user's interests list
+    user.interests.push(...newInterests);
+
+    // Save the user with updated interests
+    await user.save();
+
+    return res.json({
       success: true,
       status: 200,
       message: "User interests updated successfully",
-      data: updatedInterersts,
+      data: user,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       status: 500,
       message: "Internal server error",
