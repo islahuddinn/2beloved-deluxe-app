@@ -123,20 +123,22 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.socialLogin = catchAsync(async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
+  let id; // Define id variable here
+
   if (!user) {
     try {
       let obj = await stripe.customers.create({
         name: req.body.name,
         email: req.body.email,
       });
-      id = obj.id;
+      id = obj.id; // Assign id from Stripe's response
     } catch (error) {
       console.log(error);
     }
     user = await User.create({
       ...JSON.parse(JSON.stringify(req.body)),
       email: req.body.email,
-      customerId: id,
+      customerId: id, // Use the defined id here
       verified: true,
       password: "default123",
     });
@@ -159,6 +161,7 @@ exports.socialLogin = catchAsync(async (req, res) => {
     req.body.device
   );
 });
+
 // =========SIGNUP USER=====================
 
 exports.signup = catchAsync(async (req, res, next) => {
