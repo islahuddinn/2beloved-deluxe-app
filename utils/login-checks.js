@@ -5,7 +5,7 @@ const loginChecks = (user) => {
     // } else if (user.role === "guardian" && !user.isGuardianActive) {
     //   return "guardian-setup-pending";
   } else if (!user.name) {
-    return "account-setup-pending";
+    return "Profile-setup-pending";
   } else {
     return "login-granted";
   }
