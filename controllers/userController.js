@@ -49,8 +49,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // 3) Update user document..
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
+    profileSetup: true,
   });
-
   res.status(200).json({
     status: 200,
     success: true,

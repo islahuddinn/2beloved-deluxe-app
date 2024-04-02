@@ -133,7 +133,6 @@ exports.socialLogin = catchAsync(async (req, res) => {
     } catch (error) {
       console.log(error);
     }
-    console.log("C_id", id);
     user = await User.create({
       ...JSON.parse(JSON.stringify(req.body)),
       email: req.body.email,
