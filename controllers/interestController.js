@@ -210,8 +210,8 @@ exports.updateUserInterests = async (req, res) => {
       });
     }
 
-    // Find the user and populate existing interests
-    const user = await User.findById(userId).populate("interests");
+    // Find the user
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -220,12 +220,12 @@ exports.updateUserInterests = async (req, res) => {
       });
     }
 
-    // Ensure that user.interests is defined and is an array
-    const existingInterests = user.interests || [];
+    // Fetch existing user interests
+    const existingInterests = await Interest.find({ user: userId });
 
     // Get the IDs of existing interests
     const existingInterestIds = existingInterests.map(
-      (interest) => interest.id
+      (interest) => interest.interests
     );
 
     // Filter chosen interests to exclude existing ones
@@ -233,13 +233,13 @@ exports.updateUserInterests = async (req, res) => {
       (id) => !existingInterestIds.includes(id)
     );
 
-    // Create new interests and associate them with the user
+    // Create new interests for the user and associate them with the user
     const newInterests = await Interest.insertMany(
       newInterestIds.map((id) => ({ user: userId, interest: id }))
     );
 
     // Add the newly created interests to the user's interests list
-    user.interests.push(...newInterests);
+    Interest.push(...newInterests.map((interest) => interest._id));
 
     // Save the user with updated interests
     await user.save();

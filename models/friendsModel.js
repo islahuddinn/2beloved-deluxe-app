@@ -10,6 +10,11 @@ const followSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
+    status: {
+      type: String,
+      enum: ["pending", "accepted", "rejected"],
+      default: "pending",
+    },
   },
   {
     timestamps: true,
@@ -19,11 +24,11 @@ const followSchema = new mongoose.Schema(
 followSchema.pre(/^find/, function (next) {
   this.populate({
     path: "creator",
-    select: "firstName lastName username image",
+    select: "name username image email",
   });
   this.populate({
     path: "following",
-    select: "firstName lastName username image",
+    select: "name username image email",
   });
   next();
 });

@@ -49,7 +49,6 @@ exports.createPost = catchAsync(async (req, res, next) => {
     status: 201,
     success: true,
     message: "Post Created Succesfully",
-    post,
   });
 });
 
@@ -57,9 +56,9 @@ exports.getUserposts = catchAsync(async (req, res, next) => {
   req.query.creator = req.params.id;
 
   data = await paginationQueryExtracter(req, Post, null);
-
   const posts = await PostChecksArray(
     req.user.id,
+    req.user.name,
     JSON.parse(JSON.stringify(data.data))
   );
 

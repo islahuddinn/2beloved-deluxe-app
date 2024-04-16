@@ -82,6 +82,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isNotification: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: [true, "must enter password"],

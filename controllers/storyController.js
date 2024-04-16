@@ -21,12 +21,13 @@ exports.viewStory = catchAsync(async (req, res, next) => {
 });
 
 exports.createStory = catchAsync(async (req, res, next) => {
-  const { content, type } = req.body;
+  const { content, thumbnail, type } = req.body;
   const userId = req.user.id;
 
   const story = await Story.create({
     creator: userId,
     content: content,
+    thumbnail: thumbnail,
     type: type,
     expiresAt: Date.now() + 24 * 60 * 60 * 1000,
   });
@@ -45,7 +46,6 @@ exports.createStory = catchAsync(async (req, res, next) => {
     status: 200,
     success: true,
     message: "Story Created Successfully",
-    mystory: mystories,
   });
 });
 

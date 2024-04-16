@@ -5,6 +5,12 @@ const followController = require("../controllers/friendController");
 const router = express.Router();
 
 router.get("/", followController.getallFollow);
+router.post(
+  "/manage-friend-request/:id",
+  authController.protect,
+  authController.restrictTo("user"),
+  followController.manageFriendRequest
+);
 router
   .route("/:id")
   .post(
