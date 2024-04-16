@@ -24,7 +24,7 @@ const seenSchema = new mongoose.Schema(
 seenSchema.pre(/^find/, function (next) {
   this.populate({
     path: "creator",
-    select: "firstName lastName username image",
+    select: "name image email",
   });
   next();
 });

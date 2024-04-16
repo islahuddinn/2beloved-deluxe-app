@@ -51,7 +51,7 @@ postSchema.index({ location: "2dsphere" });
 postSchema.pre(/^find/, function (next) {
   this.populate({
     path: "creator",
-    select: "firstName lastName username image email",
+    select: "name image email",
   });
   next();
 });

@@ -29,7 +29,7 @@ storySchema.virtual("views", {
 storySchema.pre(/^find/, function (next) {
   this.populate({
     path: "creator",
-    select: "firstName lastName username image",
+    select: " name username image email",
   });
   this.populate({
     path: "views",

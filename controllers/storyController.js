@@ -49,24 +49,24 @@ exports.createStory = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getStories = catchAsync(async (req, res, next) => {
+exports.getMyStories = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
   let followings = await Follow.find({ creator: req.user.id });
   followings = followings.map((follow) => follow.following._id);
 
-  // condition = {
-  //   $and: [
-  //     {
-  //       creator: {
-  //         $in: followings,
-  //       },
-  //     },
-  //     {
-  //       expiresAt: { $gt: Date.now() },
-  //     },
-  //   ],
-  // };
+  condition = {
+    $and: [
+      {
+        creator: {
+          $in: followings,
+        },
+      },
+      {
+        expiresAt: { $gt: Date.now() },
+      },
+    ],
+  };
 
   let stories = await Story.find({
     $and: [
@@ -129,7 +129,7 @@ exports.getStories = catchAsync(async (req, res, next) => {
     otherstories: result,
   });
 });
-
+exports.seenStories = catchAsync(async (req, res, next) => {});
 exports.updateStory = factory.updateOne(Story);
 exports.getallStory = factory.getAll(Story);
 exports.getOneStory = factory.getOne(Story);

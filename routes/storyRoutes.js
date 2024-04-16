@@ -11,7 +11,7 @@ router.post(
 );
 router.get("/", storyController.getallStory);
 
-router.get("/my", authController.protect, storyController.getStories);
+router.get("/my", authController.protect, storyController.getMyStories);
 
 router.patch("/view/:id", authController.protect, storyController.viewStory);
 
