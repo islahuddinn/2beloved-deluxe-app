@@ -54,7 +54,7 @@ exports.follow = catchAsync(async (req, res, next) => {
       sender: userId,
       receiver: creator._id,
       notifyType: "follow",
-      title: `${follower.firstName} ${follower.lastName} Started Following you`,
+      title: `${follower.name} Started Following you`,
       text: ``,
       isFollowAlert: isNotFollowing,
       data: { user: userId },
@@ -68,7 +68,7 @@ exports.follow = catchAsync(async (req, res, next) => {
       for (const deviceToken of tokens) {
         await sendNotification({
           token: deviceToken,
-          title: `${follower.firstName} ${follower.lastName} Started Following you`,
+          title: `${follower.name} Started Following you`,
           body: ``,
           data: {
             value: JSON.stringify({ user: userId }),

@@ -10,7 +10,7 @@ const { default: mongoose } = require("mongoose");
 ////======= Function to create social links for the current user========////
 exports.createSocialLinks = catchAsync(async (req, res, next) => {
   const { whatsapp, facebook, instagram, tiktok, spotify, website } = req.body;
-  const userId = req.user._id; // Assuming req.user contains the current user's ID
+  const userId = req.user._id;
   console.log(userId);
 
   // Create social links document
