@@ -40,7 +40,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
       sender: req.user.id,
       receiver: user._id,
       notifyType: "post-comment",
-      title: `${req?.user?.firstName} ${req?.user?.lastName} Comment on your ${post?.content[0]?.type}`,
+      title: `${req?.user?.name}  Comment on your ${post?.content[0]?.type}`,
       text: `${str}`,
       data: { post: postId },
     });
@@ -51,7 +51,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
       for (const deviceToken of tokens) {
         await sendNotification({
           token: deviceToken,
-          title: `${req?.user?.firstName} ${req?.user?.lastName} Comment on your ${post?.content[0]?.type}`,
+          title: `${req?.user?.name}  Comment on your ${post?.content[0]?.type}`,
           body: `${str}`,
           data: {
             value: JSON.stringify({ post: postId }),

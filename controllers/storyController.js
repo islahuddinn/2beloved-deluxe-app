@@ -129,7 +129,7 @@ exports.getMyStories = catchAsync(async (req, res, next) => {
     otherstories: result,
   });
 });
-exports.seenStories = catchAsync(async (req, res, next) => {});
+
 exports.updateStory = factory.updateOne(Story);
 exports.getallStory = factory.getAll(Story);
 exports.getOneStory = factory.getOne(Story);
