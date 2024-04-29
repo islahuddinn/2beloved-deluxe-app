@@ -1,19 +1,19 @@
-const Message = require("../models/Message");
+const Message = require("../models/messageModel");
 const Chat = require("../models/chatModel");
 const moment = require("moment");
 const redis = require("redis");
-const Notification = require("../models/Notification");
+const Notification = require("../models/notificationModel");
 const RefreshToken = require("../models/refreshTokenModel");
 const User = require("../models/userModel");
 const {
   SendNotification,
   SendNotificationMultiCast,
   sendNotificationMultiCast,
-} = require("../Utils/notification");
+} = require("../utils/notification");
 
-const { sendNotification } = require("../Utils/notification");
+const { sendNotification } = require("../utils/notification");
 
-const OnlineUser = require("../Models/OnlineUser");
+const OnlineUser = require("../models/onlineUserModel");
 const { json } = require("body-parser");
 const { JsonWebTokenError } = require("jsonwebtoken");
 const { locationQuery } = require("./geoLocationQuery");
@@ -46,7 +46,7 @@ setInterval(async () => {
       if (userData[userId]) promises.push(userData[userId]());
     await Promise.all(promises);
   } catch (e) {
-    console.log(e);
+    console.log(e, "error catched while seting interval");
   }
 }, 5 * 1000);
 ///////////////////////////
@@ -76,8 +76,8 @@ client.connect().then(async (_) => {
     /// authenticate user
     const authenticated = (cb) => async (data) => {
       const user = await User.findOne({ _id: data.userId });
-      //   console.log("****************" + data.userId);
-      //   console.log(user);
+      console.log("**************** user id" + data.userId);
+      console.log(user, "mr user");
 
       if (!user) {
         socket.emit({ message: "Unauthenticated", success: false, data: {} });
@@ -172,7 +172,7 @@ client.connect().then(async (_) => {
         userSocketID[`${socket.id}`] = user._id;
 
         //////////// user info SUBSCRIBE-end
-        // console.log(user, user._id);
+        console.log(user, user._id);
         socket.join(user._id);
         await client.set(user._id);
         await getOnlineUsers();
@@ -237,7 +237,7 @@ client.connect().then(async (_) => {
           ChatRooms[i].newMessages = dbMessages.length;
         }
 
-        // console.log("Rooms ==>", ChatRooms);
+        console.log("Rooms ==>", ChatRooms);
 
         if (ChatRooms.length < 1) {
           ChatRooms = null;
@@ -493,7 +493,7 @@ client.connect().then(async (_) => {
                     sender: user._id,
                     type: "sendMessage",
                     title: "New Message",
-                    body: `${user.firstName} sent you a message`,
+                    body: `${user.name} sent you a message`,
                     data: {
                       value: JSON.stringify(user),
                     },
@@ -634,7 +634,7 @@ client.connect().then(async (_) => {
             sender: user._id,
             type: "groupMessage",
             title: "New Message",
-            body: `${user?.firstName} ${user?.lastName} added you in a group ${groupName}`,
+            body: `${user?.name} added you in a group ${groupName}`,
             data: {
               value: JSON.stringify(user),
             },
@@ -946,7 +946,7 @@ client.connect().then(async (_) => {
                   sender: user._id,
                   type: "groupMessage",
                   title: "New Message",
-                  body: `${user?.firstName} ${user?.lastName} sent message in a group ${chat?.groupName}`,
+                  body: `${user?.name}  sent message in a group ${chat?.groupName}`,
                   data: {
                     value: JSON.stringify(user),
                   },
@@ -1123,7 +1123,7 @@ client.connect().then(async (_) => {
                   sender: user._id,
                   type: "broadCastMessage",
                   title: "New Message",
-                  body: `${user?.firstName} ${user?.lastName} sent message in a broadcast`,
+                  body: `${user?.name} sent message in a broadcast`,
                   data: {
                     value: JSON.stringify(user),
                   },

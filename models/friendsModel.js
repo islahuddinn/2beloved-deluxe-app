@@ -24,11 +24,11 @@ const followSchema = new mongoose.Schema(
 followSchema.pre(/^find/, function (next) {
   this.populate({
     path: "creator",
-    select: "name username image email",
+    select: "name email image",
   });
   this.populate({
     path: "following",
-    select: "name username image email",
+    select: "name email image",
   });
   next();
 });

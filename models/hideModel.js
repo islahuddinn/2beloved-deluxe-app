@@ -24,7 +24,7 @@ const hideSchema = new mongoose.Schema(
 hideSchema.pre(/^find/, function (next) {
   this.populate({
     path: "creator",
-    select: "firstName lastName username image",
+    select: "name email image",
   });
   next();
 });
