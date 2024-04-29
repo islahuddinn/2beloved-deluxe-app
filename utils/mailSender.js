@@ -51,7 +51,7 @@ module.exports = class Email {
     console.log("sending mail...");
     await this.send(
       `Your OTP is: ${a}`,
-      `Email Verification For WorldSnap App`
+      `Email Verification For 2 Beloved-deluxe App`
     );
   }
 

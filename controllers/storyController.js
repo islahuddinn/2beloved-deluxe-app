@@ -29,7 +29,7 @@ exports.createStory = catchAsync(async (req, res, next) => {
     content: content,
     thumbnail: thumbnail,
     type: type,
-    expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+    expiresAt: Date.now() + 5 * 60 * 1000,
   });
 
   let mystories = await Story.find({

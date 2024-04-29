@@ -13,13 +13,13 @@ const privacySchema = mongoose.Schema(
   }
 );
 
-// privacySchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: "creator",
-//     select: "name image",
-//   });
-//   next();
-// });
+privacySchema.pre([/^find/, "save"], function (next) {
+  this.populate({
+    path: "creator",
+    select: "name email image",
+  });
+  next();
+});
 
 const Privacy = mongoose.model("Privacy", privacySchema);
 

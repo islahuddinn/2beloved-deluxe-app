@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { save } = require("../controllers/saveController");
 
 const seenSchema = new mongoose.Schema(
   {
@@ -21,7 +22,7 @@ const seenSchema = new mongoose.Schema(
   }
 );
 
-seenSchema.pre(/^find/, function (next) {
+seenSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
     select: "name email image",

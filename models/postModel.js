@@ -48,7 +48,7 @@ const postSchema = new mongoose.Schema(
 
 postSchema.index({ location: "2dsphere" });
 
-postSchema.pre(/^find/, function (next) {
+postSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
     select: "name email image",

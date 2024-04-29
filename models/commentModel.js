@@ -25,7 +25,7 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-commentSchema.pre(/^find/, function (next) {
+commentSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
     select: "name email image",

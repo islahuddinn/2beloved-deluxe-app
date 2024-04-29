@@ -73,6 +73,39 @@ exports.getUserposts = catchAsync(async (req, res, next) => {
     },
   });
 });
+exports.getAllPosts = catchAsync(async (req, res, next) => {
+  // Extract query parameters from the request
+  const { limit, page, creator } = req.query;
+
+  // Define the condition for filtering posts based on creator
+  const condition = creator ? { creator } : {};
+
+  try {
+    // Use the paginationQueryExtracter function to retrieve paginated posts data
+    const { data, totalPages, totalavailables } =
+      await paginationQueryExtracter(req, Post, condition);
+
+    // Return the paginated posts data in the response
+    res.status(200).json({
+      status: "success",
+      message: "Posts retrieved successfully",
+      results: data.length,
+      data: {
+        posts: data,
+        totalPages,
+        totalPosts: totalavailables,
+      },
+    });
+  } catch (error) {
+    // Handle any errors that occur during the retrieval process
+    console.error("Error retrieving posts:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Error retrieving posts",
+      error: error.message,
+    });
+  }
+});
 
 exports.getOnePost = catchAsync(async (req, res, next) => {
   let post = await Post.findById(req.params.id);
@@ -315,7 +348,7 @@ exports.explorePosts = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePost = factory.updateOne(Post);
-exports.getallPost = factory.getAll(Post);
+// exports.getallPost = factory.getAll(Post);
 exports.deletePost = factory.deleteOne(Post);
 
 exports.hidePost = catchAsync(async (req, res, next) => {

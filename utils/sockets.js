@@ -551,7 +551,7 @@ client.connect().then(async (_) => {
 
     socket.on(
       "create-group",
-      authenticated(async ({ user, members, groupName }) => {
+      authenticated(async ({ user, members, groupName, groupDescription }) => {
         ///////////time
         // Get current date in UTC
         // Get current local time
@@ -575,6 +575,7 @@ client.connect().then(async (_) => {
         chat = await Chat.create({
           chatType: "group",
           groupName: groupName,
+          groupDescription: groupDescription,
           users: members,
           groupOwner: user.id,
           lastMsgSender: user.id,
