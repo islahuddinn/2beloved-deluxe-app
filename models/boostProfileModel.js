@@ -8,7 +8,6 @@ const boostSchema = new mongoose.Schema(
     },
     boostEndDate: {
       type: Date,
-      required: true,
     },
     boostActive: {
       type: Boolean,

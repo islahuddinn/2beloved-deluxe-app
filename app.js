@@ -71,9 +71,9 @@ app.use("/api/v1", setupRoutesV1());
 // app.use("/privacy", privacyRoutes);
 // app.use("/termsandcondition", termsandconditionRoutes);
 
-app.all("*", (req, res, next) => {
-  next(new AppError(`can't find ${req.originalUrl} on this server`, 404));
-});
+// app.all("*", (req, res, next) => {
+//   next(new AppError(`can't find ${req.originalUrl} on this server`, 404));
+// });
 
 app.use(globalErrorHandler);
 
