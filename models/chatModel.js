@@ -43,15 +43,15 @@ var ChatSchema = new Schema(
 ChatSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "users",
-    select: "firstName lastName image",
+    select: "name email image",
   });
   this.populate({
     path: "groupOwner",
-    select: "firstName lastName image",
+    select: "name email image",
   });
   this.populate({
     path: "seenBy",
-    select: "firstName lastName image",
+    select: "name email image",
   });
   next();
 });
