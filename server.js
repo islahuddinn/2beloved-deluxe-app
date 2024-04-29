@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const socketapi = require("./utils/sockets");
 
 let server;
 
@@ -25,7 +26,7 @@ mongoose
   .then(() => console.log("DB connected succefully"));
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+server = app.listen(port, () => {
   console.log(`app is running on port ${port}`);
 });
 process.on("unhandledRejection", (err) => {
@@ -38,4 +39,11 @@ process.on("unhandledRejection", (err) => {
   } else {
     process.exit(1);
   }
+});
+socketapi.io.attach(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
