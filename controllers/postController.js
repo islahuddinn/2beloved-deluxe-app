@@ -87,7 +87,8 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
 
     // Return the paginated posts data in the response
     res.status(200).json({
-      status: "success",
+      status: 200,
+      success: true,
       message: "Posts retrieved successfully",
       results: data.length,
       data: {
@@ -100,7 +101,8 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
     // Handle any errors that occur during the retrieval process
     console.error("Error retrieving posts:", error);
     res.status(500).json({
-      status: "error",
+      status: 500,
+      success: false,
       message: "Error retrieving posts",
       error: error.message,
     });
