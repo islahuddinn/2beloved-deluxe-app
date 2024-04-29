@@ -15,6 +15,9 @@ var ChatSchema = new Schema(
       default:
         "https://icon-library.com/images/group-chat-icon/group-chat-icon-13.jpg",
     },
+    groupDescription: {
+      type: String,
+    },
     users: [
       {
         type: mongoose.Schema.ObjectId,
