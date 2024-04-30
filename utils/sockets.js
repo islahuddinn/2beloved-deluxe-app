@@ -241,7 +241,7 @@ client.connect().then(async (_) => {
 
         if (ChatRooms.length < 1) {
           ChatRooms = null;
-          io.to(user._id).emit("inboxes", {
+          io.to(user).emit("inboxes", {
             success: true,
             message: "Inbox Retrieved Succcessfully",
             // data: { inboxes: [...inboxes], },
@@ -249,7 +249,7 @@ client.connect().then(async (_) => {
           });
         } else {
           // socket.join(user._id);
-          io.to(user._id).emit("inboxes", {
+          io.to(user).emit("inboxes", {
             success: true,
             message: "Inbox Retrieved Succcessfully",
             // data: { inboxes: [...inboxes], },
