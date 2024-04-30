@@ -208,7 +208,7 @@ client.connect().then(async (_) => {
         /////////////////// Chat Room Find
         console.log(`Get Inboxes Connected to ${socket.id}`);
         let ChatRooms;
-        ChatRooms = await Chat.find({ users: { $in: [user] } }).sort(
+        ChatRooms = await Chat.find({ users: { $in: [user._id] } }).sort(
           "-updatedAt"
         );
 
@@ -241,7 +241,7 @@ client.connect().then(async (_) => {
 
         if (ChatRooms.length < 1) {
           ChatRooms = null;
-          io.to(user).emit("inboxes", {
+          io.to(user._id).emit("inboxes", {
             success: true,
             message: "Inbox Retrieved Succcessfully",
             // data: { inboxes: [...inboxes], },
@@ -249,7 +249,7 @@ client.connect().then(async (_) => {
           });
         } else {
           // socket.join(user._id);
-          io.to(user).emit("inboxes", {
+          io.to(user._id).emit("inboxes", {
             success: true,
             message: "Inbox Retrieved Succcessfully",
             // data: { inboxes: [...inboxes], },
