@@ -156,11 +156,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    preferences: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Preference",
+        // select: false,
+      },
+    ],
     website: {
       type: String,
       trim: true,
     },
   },
+
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 userSchema.index({ location: "2dsphere" });

@@ -1,4 +1,5 @@
 const Comment = require("../models/commentModel");
+const Like = require("../models/likeModel");
 const Hide = require("../models/hideModel");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
@@ -58,7 +59,6 @@ exports.getUserposts = catchAsync(async (req, res, next) => {
   data = await paginationQueryExtracter(req, Post, null);
   const posts = await PostChecksArray(
     req.user.id,
-    req.user.name,
     JSON.parse(JSON.stringify(data.data))
   );
 
@@ -75,26 +75,23 @@ exports.getUserposts = catchAsync(async (req, res, next) => {
 });
 exports.getAllPosts = catchAsync(async (req, res, next) => {
   // Extract query parameters from the request
-  const { limit, page, creator } = req.query;
-
-  // Define the condition for filtering posts based on creator
-  const condition = creator ? { creator } : {};
+  const userId = req.params.id;
 
   try {
     // Use the paginationQueryExtracter function to retrieve paginated posts data
-    const { data, totalPages, totalavailables } =
-      await paginationQueryExtracter(req, Post, condition);
-
+    const data = await paginationQueryExtracter(req, Post, null);
+    const posts = await PostChecksArray(
+      userId,
+      JSON.parse(JSON.stringify(data.data))
+    );
     // Return the paginated posts data in the response
     res.status(200).json({
       status: 200,
       success: true,
       message: "Posts retrieved successfully",
-      results: data.length,
       data: {
-        posts: data,
-        totalPages,
-        totalPosts: totalavailables,
+        posts: posts,
+        totalPages: data.totalPages,
       },
     });
   } catch (error) {
@@ -350,7 +347,7 @@ exports.explorePosts = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePost = factory.updateOne(Post);
-// exports.getallPost = factory.getAll(Post);
+exports.getallPost = factory.getAll(Post);
 exports.deletePost = factory.deleteOne(Post);
 
 exports.hidePost = catchAsync(async (req, res, next) => {
