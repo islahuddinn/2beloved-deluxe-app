@@ -208,7 +208,7 @@ client.connect().then(async (_) => {
         /////////////////// Chat Room Find
         console.log(`Get Inboxes Connected to ${socket.id}`);
         let ChatRooms;
-        ChatRooms = await Chat.find({ users: { $in: [user._id] } }).sort(
+        ChatRooms = await Chat.find({ users: { $in: [user] } }).sort(
           "-updatedAt"
         );
 
