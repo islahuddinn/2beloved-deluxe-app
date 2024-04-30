@@ -24,7 +24,6 @@ const likeSchema = new mongoose.Schema(
 likeSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
-    select: "name image email",
   });
   next();
 });

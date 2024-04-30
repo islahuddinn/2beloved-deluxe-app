@@ -46,7 +46,6 @@ var ChatSchema = new Schema(
 ChatSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "users",
-    select: "User",
   });
   this.populate({
     path: "groupOwner",

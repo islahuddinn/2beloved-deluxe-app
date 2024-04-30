@@ -24,7 +24,6 @@ const followSchema = new mongoose.Schema(
 followSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
-    select: "name email image",
   });
   this.populate({
     path: "following",

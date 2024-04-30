@@ -24,7 +24,6 @@ const savedSchema = new mongoose.Schema(
 savedSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
-    select: "name email image",
   });
   this.populate({
     path: "saved",

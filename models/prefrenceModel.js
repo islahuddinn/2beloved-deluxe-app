@@ -20,7 +20,6 @@ const preferenceSchema = new mongoose.Schema(
 preferenceSchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
-    select: "name email image",
   });
   next();
 });

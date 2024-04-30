@@ -29,7 +29,6 @@ storySchema.virtual("views", {
 storySchema.pre([/^find/, "save"], function (next) {
   this.populate({
     path: "creator",
-    select: "name email image",
   });
   this.populate({
     path: "views",
