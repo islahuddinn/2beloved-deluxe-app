@@ -13,13 +13,12 @@ const termsandconditionSchema = mongoose.Schema(
   }
 );
 
-// termsandconditionSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: "creator",
-//     select: "name image",
-//   });
-//   next();
-// });
+termsandconditionSchema.pre([/^find/, "save"], function (next) {
+  this.populate({
+    path: "creator",
+  });
+  next();
+});
 
 const TermsandCondition = mongoose.model(
   "TermsandCondition",
