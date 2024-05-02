@@ -23,10 +23,12 @@ router.patch(
   authController.restrictTo("user"),
   postController.hidePost
 );
-router.route("/:id").get(postController.getAllPosts);
-// router.get("/", postController.getAllPost);
+// router.route("/:id").get(postController.getAllPosts);
+router.get("get-posts/:id", postController.getAllPosts);
+router.get("/", postController.getallPost);
 router.get("/nearby", authController.protect, postController.nearbyPosts);
 router.get("/explore", authController.protect, postController.explorePosts);
+router.get("/search-posts", authController.protect, postController.searchPosts);
 router
   .route("/user/:id")
   .get(authController.protect, postController.getUserposts);

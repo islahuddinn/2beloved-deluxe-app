@@ -310,7 +310,7 @@ exports.explorePosts = catchAsync(async (req, res, next) => {
           },
           {
             $and: [
-              { preferences: { $in: [...user.preferences] } },
+              { preferences: { $in: [...user.id] } },
               {
                 creator: {
                   $in: followings,
@@ -344,6 +344,71 @@ exports.explorePosts = catchAsync(async (req, res, next) => {
       totalPages: data.totalPages,
     },
   });
+});
+// exports.search = catchAsync(async (req, res) => {
+//   const { keywords } = req.query;
+
+//   try {
+//     // Search for posts containing the keywords in their content or title
+//     const posts = await Post.find({
+//       $or: [
+//         { title: { $regex: keywords, $options: "i" } },
+//         { "creator.name": { $regex: keywords, $options: "i" } },
+//         { "creator.email": { $regex: keywords, $options: "i" } },
+//       ],
+//     });
+
+//     return res.status(200).json({ success: true, posts });
+//   } catch (error) {
+//     // Handle errors
+//     console.error("Error searching:", error);
+//     return res
+//       .status(500)
+//       .json({ success: false, message: "Internal server error" });
+//   }
+// });
+
+exports.searchPosts = catchAsync(async (req, res, next) => {
+  // Extract the search keyword from the query string
+  const keyword = req.query.search;
+
+  try {
+    // Search for users based on the name or email
+    const users = await User.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { email: { $regex: keyword, $options: "i" } },
+      ],
+    });
+
+    // Extract the user IDs from the found users
+    const userIds = users.map((user) => user._id);
+
+    const posts = await Post.find({
+      $or: [
+        { text: { $regex: keyword, $options: "i" } },
+        { creator: { $in: userIds } },
+      ],
+    });
+
+    // If no posts are found, return an error
+    if (!posts.length) {
+      return next(new CustomError("No posts found", 404));
+    }
+
+    // Return the found posts
+    res.status(200).json({
+      status: "success",
+      length: posts.length,
+      data: {
+        posts,
+      },
+    });
+  } catch (error) {
+    // Handle errors
+    console.error("Error searching posts:", error);
+    return next(new CustomError("Internal server error", 500));
+  }
 });
 
 exports.updatePost = factory.updateOne(Post);

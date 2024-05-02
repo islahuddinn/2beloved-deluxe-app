@@ -28,12 +28,12 @@ const postSchema = new mongoose.Schema(
     },
     preferences: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Preference",
       },
     ],
     creator: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     isAdmin: {

@@ -96,7 +96,7 @@ const userSchema = new mongoose.Schema(
     customerId: String,
     subscriptionId: String,
     creator: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     subscriptionPlan: {
