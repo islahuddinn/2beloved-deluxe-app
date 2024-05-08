@@ -84,6 +84,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
       userId,
       JSON.parse(JSON.stringify(data.data))
     );
+    console.log("POSTS IN GET ALL POSTS ARE:", posts)
     // Return the paginated posts data in the response
     res.status(200).json({
       status: 200,
