@@ -551,7 +551,13 @@ client.connect().then(async (_) => {
 
     socket.on(
       "create-group",
-      authenticated(async ({ user, members, groupName, groupDescription }) => {
+      authenticated(async ({ user, members, groupName, groupDescription,groupPhoto }) => {
+        console.log("GROUP USER IS:",user)
+        console.log("GROUP USER ID IS:",user.id)
+        console.log("GROUP MEMBERS ARE:", members)
+        console.log("GROUP NAME IS:",groupName)
+        console.log("GROUP DESCRIPTION IS:", groupDescription)
+        console.log("GROUP PHOTO IS:", groupPhoto)
         ///////////time
         // Get current date in UTC
         // Get current local time
@@ -584,6 +590,8 @@ client.connect().then(async (_) => {
           messageTime: currentUnixTime,
           type: "alert",
         });
+
+        console.log("GROUP CHAT CREATED:", chat)
         const chatId1 = chat._id.toString();
         socket.join(chatId1);
         ///////////////// Room Login
