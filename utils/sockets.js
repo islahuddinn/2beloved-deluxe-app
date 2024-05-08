@@ -552,6 +552,7 @@ client.connect().then(async (_) => {
     socket.on(
       "create-group",
       authenticated(async ({ user, members, groupName, groupDescription,groupPhoto }) => {
+        console.log("LISTENTING TO CREATE-GROUP EVENT:")
         console.log("GROUP USER IS:",user)
         console.log("GROUP USER ID IS:",user.id)
         console.log("GROUP MEMBERS ARE:", members)
@@ -581,6 +582,7 @@ client.connect().then(async (_) => {
         chat = await Chat.create({
           chatType: "group",
           groupName: groupName,
+          groupPhoto,
           groupDescription: groupDescription,
           users: members,
           groupOwner: user.id,
