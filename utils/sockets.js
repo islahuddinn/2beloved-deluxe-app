@@ -210,9 +210,15 @@ client.connect().then(async (_) => {
         console.log("USER IN GET-INBOXES:", user)
         console.log("USER ID IN GET-INBOXES", user.id)
         let ChatRooms;
-        ChatRooms = await Chat.find({ users: { $in: [user.id] } }).sort(
-          "-updatedAt"
-        );
+        // ChatRooms = await Chat.find({ users: { $in: [user.id] } }).sort(
+        //   "-updatedAt"
+        // );
+          ChatRooms = await Chat.find({
+            $and:[
+              {users: {$in: [user.id]}},
+              {chatType: "group"}
+            ]
+          })
         console.log("CHAT ROOMS ARE:", ChatRooms)
 
         ChatRooms = JSON.parse(JSON.stringify(ChatRooms));
