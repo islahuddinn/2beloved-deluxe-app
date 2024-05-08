@@ -73,8 +73,9 @@ exports.getUserposts = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.getAllPosts = catchAsync(async (req, res, next) => {
+exports.getAllPosts = async (req, res, next) => {
   // Extract query parameters from the request
+  console.log("HITTING API GET ALL POSTS")
   const userId = req.params.id;
 
   try {
@@ -105,7 +106,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
       error: error.message,
     });
   }
-});
+};
 
 exports.getOnePost = catchAsync(async (req, res, next) => {
   let post = await Post.findById(req.params.id);
