@@ -211,6 +211,7 @@ client.connect().then(async (_) => {
         ChatRooms = await Chat.find({ users: { $in: [user] } }).sort(
           "-updatedAt"
         );
+        console.log("CHAT ROOMS ARE:", ChatRooms)
 
         ChatRooms = JSON.parse(JSON.stringify(ChatRooms));
 
