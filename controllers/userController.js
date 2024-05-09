@@ -195,6 +195,8 @@ exports.mynotifications = catchAsync(async (req, res, next) => {
     req.query.limit
   );
 
+  console.log("NOTIFICATIONS ARE::::",data)
+
   res.status(200).json({
     success: true,
     status: 200,
