@@ -21,7 +21,7 @@ router.post(
 // protecting all routes ussing protect midleware
 router.use(authController.protect);
 
-// router.get("/mynotifications", userController.mynotifications);
+router.get("/mynotifications", userControler.mynotifications);
 router.patch("/updateMyPassword", authController.updatePassword);
 router.post("/logout", authController.logout);
 router.get("/me", userControler.getMe, userControler.getUser);
