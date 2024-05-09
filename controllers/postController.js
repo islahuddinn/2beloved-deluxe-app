@@ -400,7 +400,7 @@ exports.searchPosts = catchAsync(async (req, res, next) => {
 
     // Return the found posts
     res.status(200).json({
-      status: "success",
+      status: 200,
       length: posts.length,
       data: {
         posts,
