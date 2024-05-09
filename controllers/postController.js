@@ -395,7 +395,7 @@ exports.searchPosts = catchAsync(async (req, res, next) => {
 
     // If no posts are found, return an error
     if (!posts.length) {
-      return next(new CustomError("No posts found", 404));
+      return next(new AppError("No posts found", 404));
     }
 
     // Return the found posts
