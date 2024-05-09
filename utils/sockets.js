@@ -670,6 +670,8 @@ client.connect().then(async (_) => {
       authenticated(async ({ user, inbox }) => {
         // console.log("SELFID--->> ", user._id, "NEXTUSERID---->", inbox);
         console.log("USER ID IN SOCKET MEMORY ---->", userSocketID[socket.id]);
+        console.log("USER IN JOIN_GROUP_ROOM IS:", user)
+        console.log("GROUP_CHAT_ID IS", inbox)
         let ChatRoom;
         ///////////// Receiver
         // const receiveruser = await User.findById(inbox);
@@ -679,7 +681,10 @@ client.connect().then(async (_) => {
           $and: [{ chatType: "group" }, { _id: inbox }],
         });
 
+        console.log("CHATROOM FOUND IS:", ChatRoom)
+
         if (!ChatRoom) {
+          console.log("LOGGING CHAT ROOM NOT FOUND")
           return io.to(user._id).emit("group-messages", {
             success: false,
             message: "Messages Retrieved Successfully",
@@ -699,6 +704,8 @@ client.connect().then(async (_) => {
         })
           .populate("sender")
           .sort({ createdAt: -1 });
+
+        console.log("MESSAGES IN GROUP CHAT ARE:", messages)
 
         const updatedMessages = await Message.updateMany(
           {
