@@ -28,13 +28,15 @@ const checkBoostExpiry = async () => {
       }));
 
       await User.bulkWrite(bulkOps);
+    }else{
+      console.log("NO USER FOUND WITH BOOST ACTIVE AND EXPIRY LESS THAN CURRENT DATE")
     }
   } catch (error) {
     console.log("ERROR WHILE CHECKING BOOST EXPIRY CRON JOB:", error);
   }
 };
 module.exports = () => {
-  cron.schedule("0 0 * * *", async () => {
+  cron.schedule("* * * * *", async () => {
     console.log("CRON JOB STARTED!!!");
     await checkBoostExpiry();
     
