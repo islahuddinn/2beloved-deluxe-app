@@ -236,6 +236,7 @@ exports.getallFollow = catchAsync(async(req,res,next)=>{
     success:true,
     status:200,
     message:`${req.user.name}'s friends fetched successfully`,
+    length: friends.length,
     friends
   })
 })
