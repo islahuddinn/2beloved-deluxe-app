@@ -4,24 +4,25 @@ const User = require("../models/userModel");
 
 const checkBoostExpiry = async () => {
   try {
-    const users = await User.find({
-      "boost.isBoostActive": true,
-    });
+    const users = await User.find();
     console.log("USERS WITH BOOST ACTIVE ARE:", users);
     if (users.length > 0) {
-      
       for (const user of users) {
-        const currentDate = new Date();
-        if (currentDate > user.boost.boostExpireDate) {
-          user.boost.isBoostActive = false;
-          user.boost.boostStartDate = undefined;
-          user.boost.boostExpireDate = undefined;
+        if (user.boost.isBoostActive === "true") {
+          const currentDate = new Date();
+          if (currentDate > user.boost.boostExpireDate) {
+            user.boost.isBoostActive = false;
+            user.boost.boostStartDate = undefined;
+            user.boost.boostExpireDate = undefined;
 
-          await user.save();
+            await user.save();
+          }else{
+            console.log("ACTIVE STATUS IS NOT EXPIRED YET.")
+          }
         }
       }
-    }else{
-      console.log("NO USER FOUND WITH ACTIVE BOOST STATUS")
+    } else {
+      console.log("NO USER FOUND WITH ACTIVE BOOST STATUS");
     }
   } catch (error) {
     console.log("ERROR WHILE CHECKING BOOST EXPIRY CRON JOB:", error);
