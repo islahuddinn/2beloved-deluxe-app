@@ -37,15 +37,36 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    boostStartDate: {
-      type: Date,
-    },
-    boostEndDate: {
-      type: Date,
-    },
-    boostActive: {
-      type: Boolean,
-      default: false,
+    // boostStartDate: {
+    //   type: Date,
+    // },
+    // boostEndDate: {
+    //   type: Date,
+    // },
+    // boostActive: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+
+    boost:{
+      isBoostActive:{
+        type: Boolean,
+        default: false
+      },
+
+      boostDays:{
+        type: Number,
+        
+      },
+
+      boostStartDate:{
+        type: Date
+      },
+
+      boostExpireDate:{
+        type: Date
+      }
+
     },
     gender: {
       type: String,

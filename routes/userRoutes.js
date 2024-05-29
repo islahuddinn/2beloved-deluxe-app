@@ -30,7 +30,10 @@ router.patch("/updateProfile", userControler.updateMe);
 // router.patch("/updateProfile", userControler.updateUserProfile);
 router.get("/search", userControler.searchUsers);
 router.get("/stats/:id", userControler.userStats);
+
 router.route("/getAllUsers").get(userControler.getAllUsers);
+router.post('/change-boost-status',userControler.changeBoostStatus)
+router.get('/check-boost-status',userControler.checkBoostStatus)
 
 // router.use(authController.restrictTo("admin"));
 // router.route("/").post(userControler.createUser);

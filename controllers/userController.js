@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const moment = require('moment')
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 // const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -44,7 +45,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, "email");
+  const filteredBody = filterObj(req.body, "email", "boost");
   if (req.file) filteredBody.photo = req.file.filename;
   // 3) Update user document..
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
@@ -125,6 +126,74 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
+exports.changeBoostStatus = catchAsync(async(req,res,next)=>{
+  const {boostDays} = req.body
+  if(!boostDays){
+    return next(new AppError("Please provide boostDays.",400))
+  }
+  const currentDate = new Date()
+  const boostExpireDate = moment(currentDate).add(boostDays, 'days').toDate()
+
+  const user = await User.findById(req.user._id)
+  if(!user){
+    return next(new AppError("Could not find user",404))
+  }
+
+  user.boost.isBoostActive = true
+  user.boost.boostStartDate = currentDate
+  user.boost.boostExpireDate = boostExpireDate
+  user.boost.boostDays = boostDays
+  await user.save()
+
+  res.status(200).json({
+    success: true,
+    status: 200,
+    message:"Profile Boosted successfully",
+    user
+  })
+
+})
+
+
+exports.checkBoostStatus = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    return next(new AppError("Could not find user.", 404));
+  }
+
+  const boostInfo = user.boost;
+
+  if (!boostInfo.isBoostActive) {
+    return res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Your profile boost is not active",
+      boostInfo
+    });
+  }
+
+  const currentDate = new Date();
+  const remainingDays = moment(boostInfo.boostExpireDate).diff(moment(currentDate), 'days');
+
+  // if (remainingDays <= 0) {
+  //   user.boost.isBoostActive = false;
+  //   await user.save();
+    
+  //   return res.status(200).json({
+  //     success: true,
+  //     status: 200,
+  //     message: "Your profile boost has expired",
+  //     boostInfo: { ...boostInfo, remainingDays: 0 }
+  //   });
+  // }
+
+  res.status(200).json({
+    success: true,
+    status: 200,
+    message: "Your profile boost is active",
+    boostInfo: { ...boostInfo, remainingDays }
+  });
+});
 /////////// Notifications
 exports.mynotifications = catchAsync(async (req, res, next) => {
   const notifictations = await Notification.find({

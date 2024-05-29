@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Boost = require("../models/boostProfileModel");
+const BoostPosts = require("../utils/booster");
 
 // Boost Functionality
 exports.boostProfile = catchAsync(async (req, res, next) => {

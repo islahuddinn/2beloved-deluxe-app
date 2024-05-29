@@ -87,10 +87,18 @@ exports.getAllPosts = async (req, res, next) => {
     );
     console.log("POSTS IN GET ALL POSTS ARE:", posts)
     // Return the paginated posts data in the response
+
+    // posts.sort((a, b) => {
+    //   const boostStatusA = a.creator.boost.isBoostActive;
+    //   const boostStatusB = b.creator.boost.isBoostActive;
+    //   return boostStatusB - boostStatusA; // Sort by boost status in descending order
+    // });
+
     res.status(200).json({
       status: 200,
       success: true,
       message: "Posts retrieved successfully",
+      length: posts.length,
       data: {
         posts: posts,
         totalPages: data.totalPages,
