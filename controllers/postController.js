@@ -54,15 +54,15 @@ exports.createPost = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserposts = catchAsync(async (req, res, next) => {
-  req.query.creator = req.params.id;
-
+  //req.query.creator = req.params.id;
+  const userId = req.params.id
   data = await paginationQueryExtracter(req, Post, null);
   const posts = await PostChecksArray(
     req.user.id,
     JSON.parse(JSON.stringify(data.data))
   );
 
-  const userPosts = posts.filter((post)=>post.creator._id.toString() === req.user._id.toString())
+  const userPosts = posts.filter((post)=>post.creator._id.toString() === userId.toString())
 
   res.json({
     status: 200,
