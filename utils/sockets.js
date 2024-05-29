@@ -817,11 +817,14 @@ client.connect().then(async (_) => {
         console.log("CHAT ID IS:", inbox)
         let ChatRoom;
         //////////// Chat Room Find
+        const userLeaving = await User.findById(user._id)
+        const message = `${userLeaving.name} has left the group`
+        console.log("MESSAGE IN LEAVING GROUP IS:", message)
         ChatRoom = await Chat.findOneAndUpdate(
           {
             $and: [{ _id: inbox }],
           },
-          { $pull: { users: user._id } }
+          { $pull: { users: user._id }, $set:{LastMessage: message, lastMsgSender: user._id} }
         );
         ////////////////////////
 
