@@ -62,13 +62,15 @@ exports.getUserposts = catchAsync(async (req, res, next) => {
     JSON.parse(JSON.stringify(data.data))
   );
 
+  const userPosts = posts.filter((post)=>post.creator._id.toString() === req.user._id.toString())
+
   res.json({
     status: 200,
     success: true,
     message: "Data Retrieved Successfully",
     results: data.data.length,
     data: {
-      data: posts,
+      data: userPosts,
       totalPages: data.totalPages,
     },
   });
