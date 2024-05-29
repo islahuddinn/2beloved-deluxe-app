@@ -4,7 +4,7 @@ const authController = require("../controllers/authController");
 const followController = require("../controllers/friendController");
 const router = express.Router();
 
-router.get("/", followController.getallFollow);
+router.get("/",authController.protect, followController.getallFollow);
 // router.post(
 //   "/manage-friend-request/:id",
 //   authController.protect,
