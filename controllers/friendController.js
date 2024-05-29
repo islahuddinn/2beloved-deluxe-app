@@ -215,7 +215,30 @@ exports.follow = catchAsync(async (req, res, next) => {
 //   }
 // });
 
+
+exports.getallFollow = catchAsync(async(req,res,next)=>{
+  const friends = await Follow.find({
+    $and:[
+      {creator: req.user._id},
+      {following:{$ne: req.user._id}}
+    ]
+  })
+
+  console.log(`FRIENDS OF ${req.user.name} ARE:`, friends)
+
+  if(!friends){
+    return next(new AppError("Error fetching friends.",400))
+  }
+
+  res.status(200).json({
+    success:true,
+    status:200,
+    message:`${req.user.name}'s friends fetched successfully`,
+    friends
+  })
+})
+
 exports.updateFollow = factory.updateOne(Follow);
-exports.getallFollow = factory.getAll(Follow);
+//exports.getallFollow = factory.getAll(Follow);
 exports.getOneFollow = factory.getOne(Follow);
 exports.deleteFollow = factory.deleteOne(Follow);

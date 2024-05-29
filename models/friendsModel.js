@@ -10,11 +10,11 @@ const followSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    status: {
-      type: String,
-      enum: ["pending", "accepted", "rejected"],
-      default: "pending",
-    },
+    // status: {
+    //   type: String,
+    //   enum: ["pending", "accepted", "rejected"],
+    //   default: "pending",
+    // },
   },
   {
     timestamps: true,
