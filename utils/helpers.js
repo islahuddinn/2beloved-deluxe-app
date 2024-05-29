@@ -78,7 +78,7 @@ const PostCheckSingle = async (userId, post) => {
   post.isSaved = isSaved;
   post.totalLikes = totalLikes;
   post.totalComments = totalComments;
-  post.isOwner = post?.creator?.id === userId ? true : false;
+  post.isOwner = post?.creator?._id.toString() === userId.toString() ? true : false;
   return post;
 };
 
