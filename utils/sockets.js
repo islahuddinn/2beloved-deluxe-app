@@ -207,19 +207,19 @@ client.connect().then(async (_) => {
       authenticated(async ({ user }) => {
         /////////////////// Chat Room Find
         console.log(`Get Inboxes Connected to ${socket.id}`);
-        console.log("USER IN GET-INBOXES:", user)
-        console.log("USER ID IN GET-INBOXES", user.id)
+        console.log("USER IN GET-INBOXES:", user);
+        console.log("USER ID IN GET-INBOXES", user.id);
         let ChatRooms;
         ChatRooms = await Chat.find({ users: { $in: [user.id] } }).sort(
           "-updatedAt"
         );
-          // ChatRooms = await Chat.find({
-          //   $and:[
-          //     {users: {$in: [user.id]}},
-          //     {chatType: "group"}
-          //   ]
-          // })
-        console.log("CHAT ROOMS ARE:", ChatRooms)
+        // ChatRooms = await Chat.find({
+        //   $and:[
+        //     {users: {$in: [user.id]}},
+        //     {chatType: "group"}
+        //   ]
+        // })
+        console.log("CHAT ROOMS ARE:", ChatRooms);
 
         ChatRooms = JSON.parse(JSON.stringify(ChatRooms));
 
@@ -560,109 +560,111 @@ client.connect().then(async (_) => {
 
     socket.on(
       "create-group",
-      authenticated(async ({ user, members, groupName, groupDescription,groupPhoto }) => {
-        console.log("LISTENTING TO CREATE-GROUP EVENT:")
-        console.log("GROUP USER IS:",user)
-        console.log("GROUP USER ID IS:",user.id)
-        console.log("GROUP MEMBERS ARE:", members)
-        console.log("GROUP NAME IS:",groupName)
-        console.log("GROUP DESCRIPTION IS:", groupDescription)
-        console.log("GROUP PHOTO IS:", groupPhoto)
-        ///////////time
-        // Get current date in UTC
-        // Get current local time
-        const currentLocalTime = moment();
-        //////////////
+      authenticated(
+        async ({ user, members, groupName, groupDescription, groupPhoto }) => {
+          console.log("LISTENTING TO CREATE-GROUP EVENT:");
+          console.log("GROUP USER IS:", user);
+          console.log("GROUP USER ID IS:", user.id);
+          console.log("GROUP MEMBERS ARE:", members);
+          console.log("GROUP NAME IS:", groupName);
+          console.log("GROUP DESCRIPTION IS:", groupDescription);
+          console.log("GROUP PHOTO IS:", groupPhoto);
+          ///////////time
+          // Get current date in UTC
+          // Get current local time
+          const currentLocalTime = moment();
+          //////////////
 
-        // Convert local time to UTC
-        // const currentUtcTime = currentLocalTime.utc().utcOffset(1);
+          // Convert local time to UTC
+          // const currentUtcTime = currentLocalTime.utc().utcOffset(1);
 
-        // Convert UTC time to Unix timestamp
-        const currentUnixTime = currentLocalTime.unix();
+          // Convert UTC time to Unix timestamp
+          const currentUnixTime = currentLocalTime.unix();
 
-        console.log("Current Local Time:", currentLocalTime);
-        // console.log("Current UTC Time:", currentUtcTime);
-        console.log("Current Unix Timestamp:", currentUnixTime);
-        ///////// time
-        ///////////////// Room update
-        let chat;
-        const message = "Group Created";
-        // console.log(users);
-        chat = await Chat.create({
-          chatType: "group",
-          groupName: groupName,
-          groupPhoto,
-          groupDescription: groupDescription,
-          users: members,
-          groupOwner: user.id,
-          lastMsgSender: user.id,
-          LastMessage: message,
-          // seenBy: user.id,
-          messageTime: currentUnixTime,
-          type: "alert",
-        });
-
-        console.log("GROUP CHAT CREATED:", chat)
-        const chatId1 = chat._id.toString();
-        socket.join(chatId1);
-        ///////////////// Room Login
-        console.log("Room id in send:", chatId1);
-        //////////////////////
-        ///////// create msg logic
-        const dbMessage = await Message.create({
-          messageType: "group",
-          chatId: chat._id,
-          sender: user._id,
-          // receiver: to,
-          message,
-          messageTime: currentUnixTime,
-          seenBy: user.id,
-          type: "alert",
-        });
-
-        await Chat.findByIdAndUpdate(chat.id, {
-          lastMessageId: dbMessage._id,
-        });
-
-        const currentmessage = await Message.findById(dbMessage?._id).populate(
-          "sender"
-        );
-
-        io.to(chatId1).emit("group-messages", {
-          success: true,
-          message: "Group Created Successfully",
-          // receiver: receiveruser,
-          messages: [currentmessage],
-        });
-
-        ///////////////////////
-        const tokens = [];
-        const user1 = await User.find({ _id: { $in: members } });
-
-        for (let i = 0; i < user1.length; i++) {
-          const userTokens = JSON.parse(
-            JSON.stringify(await RefreshToken.find({ user: user1[i]?.id }))
-          ).map(({ deviceToken }) => deviceToken);
-
-          if (user1[i].isNotification && userTokens.length > 0) {
-            tokens.push(...userTokens);
-          }
-        }
-        if (tokens.length > 0) {
-          await sendNotificationMultiCast({
-            tokens: tokens,
-            sender: user._id,
-            type: "groupMessage",
-            title: "New Message",
-            body: `${user?.name} added you in a group ${groupName}`,
-            data: {
-              value: JSON.stringify(user),
-            },
+          console.log("Current Local Time:", currentLocalTime);
+          // console.log("Current UTC Time:", currentUtcTime);
+          console.log("Current Unix Timestamp:", currentUnixTime);
+          ///////// time
+          ///////////////// Room update
+          let chat;
+          const message = "Group Created";
+          // console.log(users);
+          chat = await Chat.create({
+            chatType: "group",
+            groupName: groupName,
+            groupPhoto,
+            groupDescription: groupDescription,
+            users: members,
+            groupOwner: user.id,
+            lastMsgSender: user.id,
+            LastMessage: message,
+            // seenBy: user.id,
+            messageTime: currentUnixTime,
+            type: "alert",
           });
-        }
 
-        ///////////////////////////
-      })
+          console.log("GROUP CHAT CREATED:", chat);
+          const chatId1 = chat._id.toString();
+          socket.join(chatId1);
+          ///////////////// Room Login
+          console.log("Room id in send:", chatId1);
+          //////////////////////
+          ///////// create msg logic
+          const dbMessage = await Message.create({
+            messageType: "group",
+            chatId: chat._id,
+            sender: user._id,
+            // receiver: to,
+            message,
+            messageTime: currentUnixTime,
+            seenBy: user.id,
+            type: "alert",
+          });
+
+          await Chat.findByIdAndUpdate(chat.id, {
+            lastMessageId: dbMessage._id,
+          });
+
+          const currentmessage = await Message.findById(
+            dbMessage?._id
+          ).populate("sender");
+
+          io.to(chatId1).emit("group-messages", {
+            success: true,
+            message: "Group Created Successfully",
+            // receiver: receiveruser,
+            messages: [currentmessage],
+          });
+
+          ///////////////////////
+          const tokens = [];
+          const user1 = await User.find({ _id: { $in: members } });
+
+          for (let i = 0; i < user1.length; i++) {
+            const userTokens = JSON.parse(
+              JSON.stringify(await RefreshToken.find({ user: user1[i]?.id }))
+            ).map(({ deviceToken }) => deviceToken);
+
+            if (user1[i].isNotification && userTokens.length > 0) {
+              tokens.push(...userTokens);
+            }
+          }
+          if (tokens.length > 0) {
+            await sendNotificationMultiCast({
+              tokens: tokens,
+              sender: user._id,
+              type: "groupMessage",
+              title: "New Message",
+              body: `${user?.name} added you in a group ${groupName}`,
+              data: {
+                value: JSON.stringify(user),
+              },
+            });
+          }
+
+          ///////////////////////////
+        }
+      )
     );
 
     socket.on(
@@ -670,8 +672,8 @@ client.connect().then(async (_) => {
       authenticated(async ({ user, inbox }) => {
         // console.log("SELFID--->> ", user._id, "NEXTUSERID---->", inbox);
         console.log("USER ID IN SOCKET MEMORY ---->", userSocketID[socket.id]);
-        console.log("USER IN JOIN_GROUP_ROOM IS:", user)
-        console.log("GROUP_CHAT_ID IS", inbox)
+        console.log("USER IN JOIN_GROUP_ROOM IS:", user);
+        console.log("GROUP_CHAT_ID IS", inbox);
         let ChatRoom;
         ///////////// Receiver
         // const receiveruser = await User.findById(inbox);
@@ -681,10 +683,10 @@ client.connect().then(async (_) => {
           $and: [{ chatType: "group" }, { _id: inbox }],
         });
 
-        console.log("CHATROOM FOUND IS:", ChatRoom)
+        console.log("CHATROOM FOUND IS:", ChatRoom);
 
         if (!ChatRoom) {
-          console.log("LOGGING CHAT ROOM NOT FOUND")
+          console.log("LOGGING CHAT ROOM NOT FOUND");
           return io.to(user._id).emit("group-messages", {
             success: false,
             message: "Messages Retrieved Successfully",
@@ -705,7 +707,7 @@ client.connect().then(async (_) => {
           .populate("sender")
           .sort({ createdAt: -1 });
 
-        console.log("MESSAGES IN GROUP CHAT ARE:", messages)
+        console.log("MESSAGES IN GROUP CHAT ARE:", messages);
 
         const updatedMessages = await Message.updateMany(
           {
@@ -754,7 +756,7 @@ client.connect().then(async (_) => {
         //   // receiver: receiveruser,
         //   messages: [currentmessage],
         // });
-        
+
         io.to(user._id).emit("group-messages", {
           success: true,
           message: "Messages Retrieved Successfully",
@@ -811,7 +813,8 @@ client.connect().then(async (_) => {
     socket.on(
       "leave-group",
       authenticated(async ({ user, inbox }) => {
-        console.log("SELFID--->> ", user._id, "NEXTUSERID---->", inbox);
+        console.log("USER ID IS:",user._id)
+        console.log("CHAT ID IS:", inbox)
         let ChatRoom;
         //////////// Chat Room Find
         ChatRoom = await Chat.findOneAndUpdate(
@@ -825,6 +828,20 @@ client.connect().then(async (_) => {
         const chatId = ChatRoom._id.toString();
         console.log("Room id:", chatId);
         socket.leave(chatId);
+        console.log("GROUP OWNER ID IS:", ChatRoom.groupOwner._id.toString());
+        console.log("ID OF USER WHO IS LEAVING:", user._id.toString());
+        if (ChatRoom.groupOwner._id.toString() === user._id.toString()) {
+          console.log("MAKING NEW GROUP ADMIN");
+          const newOwner = ChatRoom.users[0]._id;
+          ChatRoom.groupOwner = newOwner;
+
+          await ChatRoom.save();
+        }
+
+        if(ChatRoom.users.length <= 0){
+          await Chat.findByIdAndDelete(inbox)
+        }
+
         io.to(user._id).emit("leaving-group", {
           success: true,
           message: "Group left",
