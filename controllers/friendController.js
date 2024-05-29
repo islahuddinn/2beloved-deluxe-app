@@ -217,6 +217,8 @@ exports.follow = catchAsync(async (req, res, next) => {
 
 
 exports.getallFollow = catchAsync(async(req,res,next)=>{
+  console.log("USER LOGGED IN IS:",req.user)
+  console.log("LOGGED IN USER's ID is:",req.user._id)
   const friends = await Follow.find({
     $and:[
       {creator: req.user.id},
