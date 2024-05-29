@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const socketapi = require("./utils/sockets");
+const startCronJob = require('./utils/CronJob')
 
 let server;
 
@@ -40,6 +41,10 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   }
 });
+
+
+startCronJob()
+
 socketapi.io.attach(server, {
   cors: {
     origin: "*",
@@ -47,3 +52,5 @@ socketapi.io.attach(server, {
     credentials: true,
   },
 });
+
+
