@@ -6,11 +6,14 @@ const checkBoostExpiry = async () => {
   
     const users = await User.find();
     const allUsersLength = users.length
-    console.table([users, allUsersLength])
+    console.log("ALL USERS:", users)
+    console.log("ALL USERS LENGTH:", allUsersLength)
     const boostedUsers = users.filter((user)=> user.boost.isBoostActive === 'true')
    const boostedUsersLength = boostedUsers.length
+   console.log("--------------------------------------------------------------")
 
-   console.table([boostedUsers, boostedUsersLength])
+   console.log("BOOSTED USERS ARE:", boostedUsers)
+   console.log("BOOSTED USERS LENGTH IS:", boostedUsersLength)
     
    
 };
