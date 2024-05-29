@@ -813,20 +813,37 @@ client.connect().then(async (_) => {
     socket.on(
       "leave-group",
       authenticated(async ({ user, inbox }) => {
-        console.log("USER ID IS:",user._id)
-        console.log("CHAT ID IS:", inbox)
+        console.log("USER ID IS:", user._id);
+        console.log("CHAT ID IS:", inbox);
+
+        const currentLocalTime = moment();
+
+        const currentUnixTime = currentLocalTime.unix();
         let ChatRoom;
-        //////////// Chat Room Find
-        const userLeaving = await User.findById(user._id)
-        const message = `${userLeaving.name} has left the group`
-        console.log("MESSAGE IN LEAVING GROUP IS:", message)
+
+        const userLeaving = await User.findById(user._id);
+        const message = `${userLeaving.name} has left the group`;
+        console.log("MESSAGE IN LEAVING GROUP IS:", message);
         ChatRoom = await Chat.findOneAndUpdate(
           {
             $and: [{ _id: inbox }],
           },
-          { $pull: { users: user._id }, $set:{LastMessage: message, lastMsgSender: user._id} }
+          {
+            $pull: { users: user._id },
+            $set: { LastMessage: message, lastMsgSender: user._id },
+          }
         );
         ////////////////////////
+        const dbMessage = await Message.create({
+          messageType: "group",
+          chatId: ChatRoom._id,
+          sender: user._id,
+          // receiver: to,
+          message,
+          messageTime: currentUnixTime,
+          seenBy: user._id,
+          type: "alert",
+        });
 
         const chatId = ChatRoom._id.toString();
         console.log("Room id:", chatId);
@@ -841,8 +858,8 @@ client.connect().then(async (_) => {
           await ChatRoom.save();
         }
 
-        if(ChatRoom.users.length <= 0){
-          await Chat.findByIdAndDelete(inbox)
+        if (ChatRoom.users.length <= 0) {
+          await Chat.findByIdAndDelete(inbox);
         }
 
         io.to(user._id).emit("leaving-group", {
