@@ -49,7 +49,7 @@ exports.checkFriendStatus = catchAsync(async(req,res,next)=>{
       success: true,
       status:200,
       message: `${user.name} is in your friendlist`,
-      status: 'friend'
+      friendStatus: 'friend'
     })
   }
   // else{
@@ -74,7 +74,7 @@ exports.checkFriendStatus = catchAsync(async(req,res,next)=>{
       success: true,
       status:200,
       message: `${user.name} has not accepted your friend request yet`,
-      status: 'request-sent'
+      friendStatus: 'request-sent'
     })
   }
 
@@ -91,7 +91,7 @@ exports.checkFriendStatus = catchAsync(async(req,res,next)=>{
       success: true,
       status:200,
       message: `Friend request from ${user.name} is still pending`,
-      status: 'pending-request'
+      friendStatus: 'pending-request'
     })
   }
   
@@ -99,7 +99,7 @@ exports.checkFriendStatus = catchAsync(async(req,res,next)=>{
     success: true,
     status:200,
     message: `${user.name} is not in your friendlist`,
-    status: 'not-friend'
+    friendStatus: 'not-friend'
   })
 })
 
