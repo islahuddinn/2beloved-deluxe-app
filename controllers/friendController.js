@@ -14,8 +14,15 @@ exports.follow = catchAsync(async (req, res, next) => {
   if (followId === userId)
     return next(new AppError("You cannot be friend of yourself", 400));
 
+  // const preFollow = await Follow.findOne({
+  //   $and: [{ creator: userId }, { following: followId }],
+  // });
+
   const preFollow = await Follow.findOne({
-    $and: [{ creator: userId }, { following: followId }],
+    $and: [
+      { creator: userId , following: followId },
+      {creator: followId, following:userId}
+    ],
   });
 
   if (preFollow) {
@@ -27,7 +34,10 @@ exports.follow = catchAsync(async (req, res, next) => {
       message: "Unfriends Successfully",
     });
   } else {
-    await Follow.create({ creator: userId, following: followId });
+    await Follow.create([
+      { creator: userId, following: followId },
+      {creator: followId, following: userId}
+    ]);
 
     res.status(200).json({
       status: 200,
@@ -220,10 +230,7 @@ exports.getallFollow = catchAsync(async(req,res,next)=>{
   console.log("USER LOGGED IN IS:",req.user)
   console.log("LOGGED IN USER's ID is:",req.user._id)
   const friends = await Follow.find({
-    $or:[
-      {creator: req.user._id},
-      {following:req.user._id}
-    ]
+    creator: req.user._id
   })
 
   console.log(`FRIENDS OF ${req.user.name} ARE:`, friends)
