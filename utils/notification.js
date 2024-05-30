@@ -5,8 +5,8 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-module.exports = {
-  SendNotification: ({ token, title, body, data }) =>
+
+const SendNotification = ({ token, title, body, data }) =>
     new Promise(async (resolve, reject) => {
       try {
         console.log("dataaaa", data);
@@ -45,9 +45,9 @@ module.exports = {
         console.log("ERROR", error);
         resolve();
       }
-    }),
-
-  SendNotificationMultiCast: ({ tokens, title, body, data }) =>
+    })
+    
+const  SendNotificationMultiCast = ({ tokens, title, body, data }) =>
     new Promise(async (resolve, reject) => {
       try {
         console.log("dataaaa", data);
@@ -92,5 +92,11 @@ module.exports = {
         console.log("ERROR", error);
         reject(error);
       }
-    }),
-};
+    })
+
+
+    module.exports = {
+      SendNotification,
+      SendNotificationMultiCast
+    }
+

@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Notification = require("../models/notificationModel");
-const  SendNotification  = require('../utils/notification')
+const  {SendNotification}  = require('../utils/notification')
 const factory = require("./handleFactory");
 
 
@@ -78,22 +78,22 @@ exports.createFriendRequest = catchAsync(async(req,res,next)=>{
         data: { user: req.user._id },
       });
   
-    //   const tokens = (await RefreshToken.find({ user: requestReceiver._id })).map(
-    //     ({ deviceToken }) => deviceToken
-    //   );
+      const tokens = (await RefreshToken.find({ user: requestReceiver._id })).map(
+        ({ deviceToken }) => deviceToken
+      );
   
-    //   if (requestReceiver.isNotification) {
-    //     for (const deviceToken of tokens) {
-    //       await SendNotification({
-    //         token: deviceToken,
-    //         title: `${req.user.name} sent you a Friend Request`,
-    //         body: ``,
-    //         data: {
-    //           value: JSON.stringify({ user: req.user._id }),
-    //         },
-    //       });
-    //     }
-    //   }
+      if (requestReceiver.isNotification) {
+        for (const deviceToken of tokens) {
+          await SendNotification({
+            token: deviceToken,
+            title: `${req.user.name} sent you a Friend Request`,
+            body: ``,
+            data: {
+              value: JSON.stringify({ user: req.user._id }),
+            },
+          });
+        }
+      }
 
     res.status(201).json({
         success: true,
@@ -175,6 +175,42 @@ exports.changeRequestStatus = catchAsync(async(req,res,next)=>{
         status:200,
         message: `Friend Request of ${friendRequest.requestSender.name} ${status}ed successfully`,
         friendRequest
+    })
+})
+
+
+
+
+exports.cancelFriendRequest = catchAsync(async(req,res,next)=>{
+    const {userId} = req.params
+    if(!userId){
+        return next(new AppError("please select user for which you want to cancel your friend request",400))
+    }
+
+    const user = await User.findById(userId)
+    if(!user){
+        return next(new AppError("User with this ID doesn't exist",404))
+    }
+
+    const existingFriendRequest = await FriendRequest.findOne({
+        $and:[
+            {requestSender: req.user._id},
+            {requestReceiver: user._id},
+            {status: 'pending'}
+        ]
+    })
+
+    if(!existingFriendRequest){
+        return next(new AppError("Could not cancel friend request because friend request doesn't exist",400))
+    }
+
+    await FriendRequest.findByIdAndDelete(existingFriendRequest._id)
+
+    res.status(200).json({
+        success: true,
+        status:200,
+        message: `Your friend request to ${user.name} has been removed`,
+        data: null
     })
 })
 

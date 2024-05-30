@@ -1,5 +1,6 @@
 const Notification = require("../models/notificationModel");
 const Friend = require("../models/friendsModel");
+const FriendRequest = require('../models/friendRequestModel')
 const RefreshToken = require("../models/refreshTokenModel");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
@@ -48,16 +49,58 @@ exports.checkFriendStatus = catchAsync(async(req,res,next)=>{
       success: true,
       status:200,
       message: `${user.name} is in your friendlist`,
-      friendStatus: true
-    })
-  }else{
-    return res.status(200).json({
-      success:true,
-      status:200,
-      message: `${user.name} is not in your friendlist`,
-      friendStatus: false
+      status: 'friend'
     })
   }
+  // else{
+  //   return res.status(200).json({
+  //     success:true,
+  //     status:200,
+  //     message: `${user.name} is not in your friendlist`,
+  //     friendStatus: false
+  //   })
+  // }
+
+  const requestSent = await FriendRequest.findOne({
+    $and:[
+      {requestSender:req.user._id},
+      {requestReceiver: user._id},
+      {status: 'pending'}
+    ]
+  })
+
+  if(requestSent){
+    return res.status(200).json({
+      success: true,
+      status:200,
+      message: `${user.name} has not accepted your friend request yet`,
+      status: 'request-sent'
+    })
+  }
+
+  const requestReceived = await FriendRequest.findOne({
+    $and:[
+      {requestReceiver: req.user._id},
+      {requestSender: user._id},
+      {status: 'pending'}
+    ]
+  })
+
+  if(requestReceived){
+    return res.status(200).json({
+      success: true,
+      status:200,
+      message: `Friend request from ${user.name} is still pending`,
+      status: 'pending-request'
+    })
+  }
+  
+  return res.status(200).json({
+    success: true,
+    status:200,
+    message: `${user.name} is not in your friendlist`,
+    status: 'not-friend'
+  })
 })
 
 
