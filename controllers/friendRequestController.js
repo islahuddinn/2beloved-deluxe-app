@@ -161,7 +161,7 @@ exports.changeRequestStatus = catchAsync(async(req,res,next)=>{
             ({ deviceToken }) => deviceToken
           );
       
-          if (requestReceiver.isNotification) {
+          if (friendRequest.requestReceiver.isNotification) {
             for (const deviceToken of tokens) {
               await SendNotification({
                 token: deviceToken,
