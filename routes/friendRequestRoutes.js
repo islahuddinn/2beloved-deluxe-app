@@ -13,7 +13,7 @@ router.post('/send-request/:requestReceiverId', authController.protect, friendRe
 router.post('/change-request-status/:friendRequestId', authController.protect, friendRequestController.changeRequestStatus)
 
 
-router.delete('/cancel-request/:userId', authController.protect, friendRequestController.cancelFriendRequest)
+router.post('/cancel-request/:userId', authController.protect, friendRequestController.cancelFriendRequest)
 
 
 
