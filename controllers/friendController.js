@@ -27,7 +27,7 @@ exports.getMyFriends = catchAsync(async(req,res,next)=>{
 
 
 exports.checkFriendStatus = catchAsync(async(req,res,next)=>{
-  const userId = req.params
+  const {userId} = req.params
   if(!userId){
     return next(new AppError("Please select the user whose friend status you want to check",400))
   }
