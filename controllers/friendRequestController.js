@@ -78,22 +78,22 @@ exports.createFriendRequest = catchAsync(async(req,res,next)=>{
         data: { user: req.user._id },
       });
   
-      const tokens = (await RefreshToken.find({ user: requestReceiver._id })).map(
-        ({ deviceToken }) => deviceToken
-      );
+    //   const tokens = (await RefreshToken.find({ user: requestReceiver._id })).map(
+    //     ({ deviceToken }) => deviceToken
+    //   );
   
-      if (requestReceiver.isNotification) {
-        for (const deviceToken of tokens) {
-          await SendNotification({
-            token: deviceToken,
-            title: `${req.user.name} sent you a Friend Request`,
-            body: ``,
-            data: {
-              value: JSON.stringify({ user: req.user._id }),
-            },
-          });
-        }
-      }
+    //   if (requestReceiver.isNotification) {
+    //     for (const deviceToken of tokens) {
+    //       await SendNotification({
+    //         token: deviceToken,
+    //         title: `${req.user.name} sent you a Friend Request`,
+    //         body: ``,
+    //         data: {
+    //           value: JSON.stringify({ user: req.user._id }),
+    //         },
+    //       });
+    //     }
+    //   }
 
     res.status(201).json({
         success: true,
