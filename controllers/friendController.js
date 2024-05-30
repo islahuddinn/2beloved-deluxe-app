@@ -115,12 +115,16 @@ exports.unfriend = catchAsync(async(req,res,next)=>{
     return next(new AppError("Friend with this ID doesn't exist.",404))
   }
 
+  console.log("FRIEND THAT YOU WANT TO REMOVE:", friendValid)
+
   const friends = await Friend.find({
-    $and:[
+    $or:[
       {user: req.user._id, friend: friendId},
       {user: friendId, friend: req.user._id}
     ]
   })
+
+  console.log("FRIENDS UNFRIENDING:", friends)
 
   if(friends.length > 0){
     for(const friend of friends){
