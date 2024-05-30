@@ -120,10 +120,16 @@ exports.changeRequestStatus = catchAsync(async(req,res,next)=>{
         return next(new AppError("Friend Request with this ID doesn't exist.",400))
     }
 
-    if(friendRequest.requestReceiver._id !== req.user._id){
+    console.log("FRIEND REQUEST IN CHANGE REQUEST STATUS IS:",friendRequest)
+
+    console.log("RECEIVER ID IS:", friendRequest.requestReceiver._id.toString())
+    console.log("LOGGED IN USER ID IS:", req.user._id.toString())
+
+    if(friendRequest.requestReceiver._id.toString() !== req.user._id.toString()){
         return next(new AppError("This request wasn't sent to you. You cannot change its status.",400))
     }
 
+    
     friendRequest.status = status
 
     await friendRequest.save()
