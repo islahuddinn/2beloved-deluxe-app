@@ -14,16 +14,16 @@ exports.follow = catchAsync(async (req, res, next) => {
   if (followId === userId)
     return next(new AppError("You cannot be friend of yourself", 400));
 
-  // const preFollow = await Follow.findOne({
-  //   $and: [{ creator: userId }, { following: followId }],
-  // });
-
   const preFollow = await Follow.findOne({
-    $and: [
-      { creator: userId , following: followId },
-      {creator: followId, following:userId}
-    ],
+    $and: [{ creator: userId }, { following: followId }],
   });
+
+  // const preFollow = await Follow.findOne({
+  //   $and: [
+  //     { creator: userId , following: followId },
+  //     {creator: followId, following:userId}
+  //   ],
+  // });
 
   if (preFollow) {
     await Follow.findByIdAndDelete(preFollow._id);
