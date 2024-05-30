@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Notification = require("../models/notificationModel");
-const { sendNotification } = require("../utils/notification");
+const { SendNotification } = require("../utils/notification");
 const factory = require("./handleFactory");
 
 
@@ -84,7 +84,7 @@ exports.createFriendRequest = catchAsync(async(req,res,next)=>{
   
       if (requestReceiver.isNotification) {
         for (const deviceToken of tokens) {
-          await sendNotification({
+          await SendNotification({
             token: deviceToken,
             title: `${req.user.name} sent you a Friend Request`,
             body: ``,
@@ -157,7 +157,7 @@ exports.changeRequestStatus = catchAsync(async(req,res,next)=>{
       
           if (requestReceiver.isNotification) {
             for (const deviceToken of tokens) {
-              await sendNotification({
+              await SendNotification({
                 token: deviceToken,
                 title: `${req.user.name} accepted your Friend Request`,
                 body: ``,

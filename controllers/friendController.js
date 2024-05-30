@@ -4,7 +4,7 @@ const RefreshToken = require("../models/refreshTokenModel");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { sendNotification } = require("../utils/notification");
+const { SendNotification } = require("../utils/notification");
 const factory = require("./handleFactory");
 
 
