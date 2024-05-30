@@ -78,7 +78,7 @@ exports.createFriendRequest = catchAsync(async(req,res,next)=>{
         data: { user: req.user._id },
       });
   
-      const tokens = (await RefreshToken.find({ user: creator.id })).map(
+      const tokens = (await RefreshToken.find({ user: requestReceiver._id })).map(
         ({ deviceToken }) => deviceToken
       );
   
@@ -151,7 +151,7 @@ exports.changeRequestStatus = catchAsync(async(req,res,next)=>{
             data: { user: req.user._id },
           });
       
-          const tokens = (await RefreshToken.find({ user: creator.id })).map(
+          const tokens = (await RefreshToken.find({ user: friendRequest.requestSender._id })).map(
             ({ deviceToken }) => deviceToken
           );
       
