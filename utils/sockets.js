@@ -790,7 +790,12 @@ client.connect().then(async (_) => {
       "add-group-members",
       authenticated(async ({ user, inbox, members }) => {
         console.log("SELFID--->> ", user._id, "NEXTUSERID---->", inbox);
+
+        console.log("MEMBERS BEING ADDED ARE:",members)
         let ChatRoom;
+        const currentLocalTime = moment();
+
+        const currentUnixTime = currentLocalTime.unix();
         //////////// Chat Room Find
         ChatRoom = await Chat.findOneAndUpdate(
           {
@@ -803,6 +808,34 @@ client.connect().then(async (_) => {
         const chatId = ChatRoom._id.toString();
         console.log("Room id:", chatId);
         socket.leave(chatId);
+
+        let message;
+        for(const member of members){
+          console.log("SENDING ADD MEMBER MESSAGES")
+          const user = await User.findById(member)
+          if(!user){
+            console.log(`NO USER FOUND WITH ID ${member}`)
+          }
+          message = `${user.name} was added to the group`
+          const dbMessage = await Message.create({
+            messageType: "group",
+            chatId: ChatRoom._id,
+            sender: user._id,
+            // receiver: to,
+            message,
+            messageTime: currentUnixTime,
+            seenBy: user._id,
+            type: "alert",
+          });
+
+          ChatRoom.lastMsgSender = user._id
+          ChatRoom.LastMessage = message
+
+          await ChatRoom.save()
+
+        }
+
+       
         io.to(user._id).emit("members-added-group", {
           success: true,
           message: "Members Added",
