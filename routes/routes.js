@@ -12,6 +12,7 @@ const postRoutes = require("./postRoutes");
 const storyRoutes = require("./storyRoutes");
 const alertRoutes = require("./alertRoutes");
 const friendRequestRoutes = require('./friendRequestRoutes')
+const blockRoutes = require('./blockRoutes')
 
 const setupRoutesV1 = () => {
   const router = express.Router();
@@ -28,6 +29,7 @@ const setupRoutesV1 = () => {
   router.use("/alert", alertRoutes);
   router.use("/subscription", subscriptionRoutes);
   router.use('/requests', friendRequestRoutes)
+  router.use('/block', blockRoutes)
 
   return router;
 };

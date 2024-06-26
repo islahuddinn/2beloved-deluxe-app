@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors')
 // const userRouter = require("./routes/userRoutes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -45,6 +46,8 @@ app.get("/about-us", (req, res) => {
 app.use(helmet());
 // Development logging
 app.use(express.json()); //Body parser for JSON data
+app.use(cors())
+app.options('*',cors())
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
