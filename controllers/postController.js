@@ -115,7 +115,7 @@ exports.getAllPosts = async (req, res, next) => {
       status: 200,
       success: true,
       message: "Posts retrieved successfully",
-      length: posts.length,
+      length: filteredPosts.length,
       data: {
         posts: filteredPosts,
         totalPages: data.totalPages,
