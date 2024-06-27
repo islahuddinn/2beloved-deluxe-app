@@ -34,19 +34,6 @@ blockSchema.pre([/find^/, 'save'], function(next){
     next()
 })
 
-blockSchema.pre([/find^/, 'save'], function(next){
-    this.populate({
-        path:'blockedUser',
-        select: 'name avatar email'
-    });
-
-    this.populate({
-        path: 'blockedBy',
-        select: 'name avatar email'
-    })
-
-    next()
-})
 
 const Block = mongoose.model('Block', blockSchema)
 
