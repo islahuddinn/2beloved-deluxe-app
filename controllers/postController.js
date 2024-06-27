@@ -423,8 +423,8 @@ exports.searchPosts = catchAsync(async (req, res, next) => {
       return next(new AppError("No posts found", 404));
     }
 
-    const blockedByUser = await Block.find({blockedBy: userId})
-    const blockedByOthers = await Block.find({blockedUser: userId})
+    const blockedByUser = await Block.find({blockedBy: req.user._id})
+    const blockedByOthers = await Block.find({blockedUser: req.user._id})
 
     if(!blockedByUser || !blockedByOthers){
       return next(new CustomError("Error fetching blocked users",400))
