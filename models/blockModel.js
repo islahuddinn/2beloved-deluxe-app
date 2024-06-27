@@ -20,7 +20,7 @@ const blockSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
-blockSchema.pre([/find^/, 'save'], function(next){
+blockSchema.pre([/^find/, 'save'], function(next){
     this.populate({
         path:'blockedUser',
         select: 'name image email'
