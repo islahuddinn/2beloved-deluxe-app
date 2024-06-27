@@ -105,8 +105,8 @@ exports.getAllPosts = async (req, res, next) => {
     }
 
     const blockedUsersIds = [
-      ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser.toString()),
-      ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy.toString()),
+      ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser._id.toString()),
+      ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy._id.toString()),
     ];
 
     console.log("BLOCKED USER IDS ARE:", blockedUsersIds)
