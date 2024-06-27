@@ -2,6 +2,7 @@ const Comment = require("../models/commentModel");
 const Like = require("../models/likeModel");
 const Hide = require("../models/hideModel");
 const Post = require("../models/postModel");
+const Block = require('../models/blockModel')
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
@@ -96,13 +97,27 @@ exports.getAllPosts = async (req, res, next) => {
     //   return boostStatusB - boostStatusA; // Sort by boost status in descending order
     // });
 
+    const blockedByUser = await Block.find({blockedBy: req.user._id})
+    const blockedByOthers = await Block.find({blockedUser: req.user._id})
+
+    if(!blockedByUser || !blockedByOthers){
+      return next(new CustomError("Error fetching blocked users",400))
+    }
+
+    const blockedUsersIds = [
+      ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser.toString()),
+      ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy.toString()),
+    ];
+
+    const filteredPosts = posts.filter((post)=> !blockedUsersIds.includes(post.creator._id.toString()))
+    console.log("FILTERED POSTS ARE:", filteredPosts)
     res.status(200).json({
       status: 200,
       success: true,
       message: "Posts retrieved successfully",
       length: posts.length,
       data: {
-        posts: posts,
+        posts: filteredPosts,
         totalPages: data.totalPages,
       },
     });

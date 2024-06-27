@@ -276,6 +276,7 @@ exports.mynotifications = catchAsync(async (req, res, next) => {
 
 ////===User Search=====//////
 exports.searchUsers = catchAsync(async (req, res, next) => {
+  
   let condition;
   let data;
   let search;
