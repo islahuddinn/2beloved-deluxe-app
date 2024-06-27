@@ -468,3 +468,7 @@ exports.hidePost = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+
+
+exports.getAllPostsAdmin = factory.getAll(Post)
