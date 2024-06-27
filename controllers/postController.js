@@ -97,8 +97,8 @@ exports.getAllPosts = async (req, res, next) => {
     //   return boostStatusB - boostStatusA; // Sort by boost status in descending order
     // });
 
-    const blockedByUser = await Block.find({blockedBy: req.user.id})
-    const blockedByOthers = await Block.find({blockedUser: req.user.id})
+    const blockedByUser = await Block.find({blockedBy: userId})
+    const blockedByOthers = await Block.find({blockedUser: userId})
 
     if(!blockedByUser || !blockedByOthers){
       return next(new CustomError("Error fetching blocked users",400))
