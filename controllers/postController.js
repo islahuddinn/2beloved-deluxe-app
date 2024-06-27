@@ -423,12 +423,27 @@ exports.searchPosts = catchAsync(async (req, res, next) => {
       return next(new AppError("No posts found", 404));
     }
 
+    const blockedByUser = await Block.find({blockedBy: userId})
+    const blockedByOthers = await Block.find({blockedUser: userId})
+
+    if(!blockedByUser || !blockedByOthers){
+      return next(new CustomError("Error fetching blocked users",400))
+    }
+
+    const blockedUsersIds = [
+      ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser.toString()),
+      ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy.toString()),
+    ];
+
+    const filteredPosts = posts.filter((post)=> !blockedUsersIds.includes(post.creator._id.toString()))
+    console.log("FILTERED POSTS ARE:", filteredPosts)
+
     // Return the found posts
     res.status(200).json({
       status: 200,
       length: posts.length,
       data: {
-        posts,
+        posts: filteredPosts,
       },
     });
   } catch (error) {
