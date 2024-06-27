@@ -109,6 +109,8 @@ exports.getAllPosts = async (req, res, next) => {
       ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy.toString()),
     ];
 
+    console.log("BLOCKED USER IDS ARE:", blockedUsersIds)
+
     const filteredPosts = posts.filter((post)=> !blockedUsersIds.includes(post.creator._id.toString()))
     console.log("FILTERED POSTS ARE:", filteredPosts)
     res.status(200).json({
