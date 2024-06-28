@@ -433,8 +433,8 @@ exports.searchPosts = catchAsync(async (req, res, next) => {
     }
 
     const blockedUsersIds = [
-      ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser.toString()),
-      ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy.toString()),
+      ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser._id.toString()),
+      ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy._id.toString()),
     ];
 
     const filteredPosts = posts.filter((post)=> !blockedUsersIds.includes(post.creator._id.toString()))
