@@ -7,11 +7,11 @@ const factory = require('./handleFactory')
 
 
 exports.createContactUs = catchAsync(async(req,res,next)=>{
-    const {name, email, reason, description} = req.body
+    const { reason, description} = req.body
 
     const newContactUs = await ContactUs.create({
-        name,
-        email,
+        name: req.user.name,
+        email: req.user.email,
         reason,
         description,
         user: req.user._id
