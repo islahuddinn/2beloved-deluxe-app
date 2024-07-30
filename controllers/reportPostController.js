@@ -40,7 +40,7 @@ exports.reportPost = catchAsync(async (req, res, next) => {
   console.log('--------------------------------------------------------')
   console.log("EXISTING_REPORT_IS:", existingReport)
   const alreadyReported = existingReport.reportedBy.some(
-    (report) => report.user.toString() === req.user._id.toString()
+    (report) => report.user._id.toString() === req.user._id.toString()
   );
 
   if (alreadyReported) {
