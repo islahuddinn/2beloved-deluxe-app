@@ -13,6 +13,7 @@ const storyRoutes = require("./storyRoutes");
 const alertRoutes = require("./alertRoutes");
 const friendRequestRoutes = require('./friendRequestRoutes')
 const blockRoutes = require('./blockRoutes')
+const contactUsRoutes = require('./contactUsRoutes')
 
 const setupRoutesV1 = () => {
   const router = express.Router();
@@ -30,6 +31,8 @@ const setupRoutesV1 = () => {
   router.use("/subscription", subscriptionRoutes);
   router.use('/requests', friendRequestRoutes)
   router.use('/block', blockRoutes)
+  router.use('/contact-us', contactUsRoutes)
+  
 
   return router;
 };
