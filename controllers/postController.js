@@ -104,7 +104,8 @@ exports.getAllPosts = async (req, res, next) => {
     if(!blockedByUser || !blockedByOthers){
       return next(new CustomError("Error fetching blocked users",400))
     }
-
+    console.log("REQ_USER_IS:", req.user)
+    console.log("REQ_USE_ID_IS:", req.user._id)
     const reportedPostsByUser = await ReportPost.find({"reportedBy.user": req.user._id})
 
     console.log("REPORTED_POSTS_BY_USER_ARE:", reportedPostsByUser)
