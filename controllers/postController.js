@@ -4,6 +4,7 @@ const Hide = require("../models/hideModel");
 const Post = require("../models/postModel");
 const Block = require('../models/blockModel')
 const User = require("../models/userModel");
+const ReportPost = require('../models/reportPostModel')
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { PostCheckSingle, PostChecksArray } = require("../utils/helpers");
@@ -88,7 +89,7 @@ exports.getAllPosts = async (req, res, next) => {
       userId,
       JSON.parse(JSON.stringify(data.data))
     );
-    console.log("POSTS IN GET ALL POSTS ARE:", posts)
+   // console.log("POSTS IN GET ALL POSTS ARE:", posts)
     // Return the paginated posts data in the response
 
     // posts.sort((a, b) => {
@@ -104,14 +105,23 @@ exports.getAllPosts = async (req, res, next) => {
       return next(new CustomError("Error fetching blocked users",400))
     }
 
+    const reportedPostsByUser = await ReportPost.find({"reportedBy.user": req.user._id})
+
+    console.log("REPORTED_POSTS_BY_USER_ARE:", reportedPostsByUser)
+
+    const reportedPostIds = reportedPostsByUser.map(report => report.post.toString());
+
+    console.log("REPORTED_POSTS_IDS_ARE:", reportedPostIds)
+
     const blockedUsersIds = [
       ...blockedByUser.map((blockedDoc) => blockedDoc.blockedUser._id.toString()),
       ...blockedByOthers.map((blockedDoc) => blockedDoc.blockedBy._id.toString()),
     ];
 
-    console.log("BLOCKED USER IDS ARE:", blockedUsersIds)
+  //  console.log("BLOCKED USER IDS ARE:", blockedUsersIds)
 
-    const filteredPosts = posts.filter((post)=> !blockedUsersIds.includes(post.creator._id.toString()))
+    const filteredPosts = posts.filter((post)=> !blockedUsersIds.includes(post.creator._id.toString())  &&
+    !reportedPostIds.includes(post._id.toString()))
     console.log("FILTERED POSTS ARE:", filteredPosts)
     res.status(200).json({
       status: 200,
