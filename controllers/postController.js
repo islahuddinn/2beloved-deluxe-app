@@ -110,7 +110,7 @@ exports.getAllPosts = async (req, res, next) => {
 
     console.log("REPORTED_POSTS_BY_USER_ARE:", reportedPostsByUser)
 
-    const reportedPostIds = reportedPostsByUser.map(report => report.post.toString());
+    const reportedPostIds = reportedPostsByUser.map(report => report.post._id.toString());
 
     console.log("REPORTED_POSTS_IDS_ARE:", reportedPostIds)
 
