@@ -27,6 +27,12 @@ const reportPostSchema = new mongoose.Schema({
 },{timestamps:true})
 
 
+reportPostSchema.pre([/^find/, 'save'], function(next){
+    this.populate({
+        path:'post'
+    })
+    next()
+})
 
 const ReportPost = mongoose.model('ReportPost', reportPostSchema)
 

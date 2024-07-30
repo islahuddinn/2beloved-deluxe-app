@@ -41,7 +41,7 @@ contactUsSchema.pre([/^find/, 'save'], function(next){
     next()
 })
 
-const ContactUs = mogoose.model('ContactUs', contactUsSchema)
+const ContactUs = mongoose.model('ContactUs', contactUsSchema)
 
 
 module.exports = ContactUs
