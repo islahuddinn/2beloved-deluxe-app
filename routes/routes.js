@@ -14,6 +14,7 @@ const alertRoutes = require("./alertRoutes");
 const friendRequestRoutes = require('./friendRequestRoutes')
 const blockRoutes = require('./blockRoutes')
 const contactUsRoutes = require('./contactUsRoutes')
+const reportPostRoutes = require('./reportPostRoutes')
 
 const setupRoutesV1 = () => {
   const router = express.Router();
@@ -32,6 +33,7 @@ const setupRoutesV1 = () => {
   router.use('/requests', friendRequestRoutes)
   router.use('/block', blockRoutes)
   router.use('/contact-us', contactUsRoutes)
+  router.use('/report', reportPostRoutes)
   
 
   return router;
