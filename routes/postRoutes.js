@@ -25,7 +25,7 @@ router.patch(
 );
 
 // router.route("/:id").get(postController.getAllPosts);
-router.get("/get-posts/:id", postController.getAllPosts);
+router.get("/get-posts/:id", authController.protect, postController.getAllPosts);
 router.get('/get-all-posts', authController.protect, postController.getAllPostsAdmin)
 //router.get("/", postController.getallPost);
 router.get("/nearby", authController.protect, postController.nearbyPosts);
