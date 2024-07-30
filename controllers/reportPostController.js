@@ -5,6 +5,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 exports.reportPost = catchAsync(async (req, res, next) => {
+    console.log("API HIT")
   const { postId } = req.params;
   const { reason } = req.body;
   if (!postId) {
